@@ -12,3 +12,6 @@ node_modules/
 .claude/settings.local.json
 .vscode/
 .idea/
+
+# Documento de planejamento interno (mantido apenas localmente)
+PLAN.md

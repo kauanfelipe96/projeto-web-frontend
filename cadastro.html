@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cadastro no Pick'em da comunidade do IEM Cologne Major 2026.">
+    <title>Cadastro no Pick'em — IEM Cologne Major 2026</title>
+</head>
+<body>
+    <header>
+        <a href="index.html"><strong>IEM COLOGNE MAJOR 2026</strong></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="cadastro">
+            <h1>Cadastro no Pick'em</h1>
+            <p>Preencha os dados abaixo para participar do Pick'em da comunidade do IEM Cologne Major 2026.</p>
+
+            <form action="login.html" method="get">
+                <label for="nome-completo">
+                    Nome completo
+                    <input type="text" id="nome-completo" name="nome-completo" required minlength="3" autocomplete="name">
+                </label>
+
+                <label for="email">
+                    E-mail
+                    <input type="email" id="email" name="email" required autocomplete="email">
+                </label>
+
+                <label for="senha">
+                    Senha
+                    <input type="password" id="senha" name="senha" required minlength="6" autocomplete="new-password">
+                </label>
+
+                <label for="nick-steam">
+                    Nick no Steam
+                    <input type="text" id="nick-steam" name="nick-steam" required>
+                </label>
+
+                <label for="time-favorito">
+                    Time favorito
+                    <select id="time-favorito" name="time-favorito" required>
+                        <option value="">Selecione um time</option>
+                        <option value="vitality">Team Vitality</option>
+                        <option value="mibr">MIBR</option>
+                        <option value="navi">NAVI</option>
+                        <option value="faze">FaZe Clan</option>
+                        <option value="g2">G2 Esports</option>
+                        <option value="mongolz">The MongolZ</option>
+                        <option value="liquid">Team Liquid</option>
+                        <option value="furia">FURIA</option>
+                        <option value="spirit">Team Spirit</option>
+                    </select>
+                </label>
+
+                <label for="data-nascimento">
+                    Data de nascimento
+                    <input type="date" id="data-nascimento" name="data-nascimento">
+                </label>
+
+                <button type="submit">Cadastrar</button>
+            </form>
+
+            <p>Já tem conta? <a href="login.html">Entrar</a>.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="https://www.linkedin.com/in/kauan-felipe-fullstack/" target="_blank" rel="noopener">Currículo (LinkedIn)</a></p>
+        <p><a href="https://github.com/kauanfelipe96/projeto-web-frontend" target="_blank" rel="noopener">Repositório no GitHub</a></p>
+        <p><small>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA — Projeto acadêmico, sem vínculo oficial com ESL ou Valve.</small></p>
+    </footer>
+</body>
+</html>

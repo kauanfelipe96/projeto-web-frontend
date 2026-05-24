@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel administrativo do Pick'em da comunidade — IEM Cologne Major 2026.">
+    <title>Painel Administrativo — IEM Cologne Major 2026</title>
+</head>
+<body>
+    <header>
+        <a href="index.html"><strong>IEM COLOGNE MAJOR 2026</strong></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="admin">
+            <h1>Painel Administrativo — Pick'em IEM Cologne</h1>
+            <p>Gerencie os participantes inscritos no Pick'em da comunidade.</p>
+
+            <form id="form-admin">
+                <label for="input-nome">
+                    Nome do usuário
+                    <input id="input-nome" name="nome" type="text" required>
+                </label>
+
+                <label for="input-email">
+                    E-mail
+                    <input id="input-email" name="email" type="email" required>
+                </label>
+
+                <div>
+                    <button id="btn-cadastrar" type="submit">Cadastrar</button>
+                    <button id="btn-limpar" type="button">Limpar campos</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="lista">
+            <h2>Participantes cadastrados</h2>
+
+            <div>
+                <label for="busca">
+                    Pesquisar
+                    <input id="busca" type="search" placeholder="Pesquisar por nome ou e-mail...">
+                </label>
+                <button id="btn-limpar-tudo" type="button">Excluir todos</button>
+            </div>
+
+            <ul id="lista-usuarios"></ul>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="https://www.linkedin.com/in/kauan-felipe-fullstack/" target="_blank" rel="noopener">Currículo (LinkedIn)</a></p>
+        <p><a href="https://github.com/kauanfelipe96/projeto-web-frontend" target="_blank" rel="noopener">Repositório no GitHub</a></p>
+        <p><small>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA — Projeto acadêmico, sem vínculo oficial com ESL ou Valve.</small></p>
+    </footer>
+</body>
+</html>
