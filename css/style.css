@@ -129,7 +129,7 @@ h3 {
     text-align: center;
     padding: 2rem 1rem;
     background-color: var(--cor-navy);
-    background-image: linear-gradient(rgba(31, 31, 35, 0.7), rgba(31, 31, 35, 0.85)), url('../assets/img/lanxess-arena.jpg');
+    background-image: linear-gradient(rgba(31, 31, 35, 0.7), rgba(31, 31, 35, 0.85)), url('../assets/img/lanxess-fachada.jpg');
     background-size: cover;
     background-position: center;
     border-bottom: 1px solid var(--cor-divider);
@@ -161,6 +161,12 @@ h3 {
     flex-wrap: wrap;
     gap: 1rem;
     justify-content: space-between;
+    padding: 1.25rem;
+    background-color: var(--cor-navy);
+    background-image: linear-gradient(rgba(31, 31, 35, 0.92), rgba(31, 31, 35, 0.92)), url('../assets/img/cologne-sunset.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--cor-divider);
 }
 
 #sobre > h2 {
