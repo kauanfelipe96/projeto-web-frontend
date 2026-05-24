@@ -1,0 +1,14 @@
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dependências
+node_modules/
+
+# Configurações locais de IDE / ferramentas
+.claude/settings.local.json
+.vscode/
+.idea/
