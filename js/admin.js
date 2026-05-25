@@ -180,21 +180,21 @@ function carregarDadosExemplo() {
     }
 
     var EXEMPLOS = [
-        { nome: 'Ana Beatriz Souza',     nick: 'anasz',       time: 'FURIA' },
-        { nome: 'Bruno Carvalho',        nick: 'b_carva',     time: 'Team Vitality' },
-        { nome: 'Carla Mendes',          nick: 'kmends',      time: 'MIBR' },
-        { nome: 'Diego Ribeiro',         nick: 'dr1bz',       time: 'paiN Gaming' },
-        { nome: 'Eduarda Lima',          nick: 'duudz',       time: 'Natus Vincere' },
-        { nome: 'Felipe Andrade',        nick: 'fefe_csgo',   time: 'BIG' },
-        { nome: 'Gustavo Pereira',       nick: 'gustp',       time: 'The MongolZ' },
-        { nome: 'Helena Martins',        nick: 'helmart',     time: 'FURIA' },
-        { nome: 'Igor Almeida',          nick: 'iggynh',      time: 'G2 Esports' },
-        { nome: 'Julia Castro',          nick: 'jucastro',    time: 'Astralis' },
-        { nome: 'Kauan Felipe',          nick: 'kauanzera',   time: 'MIBR' },
-        { nome: 'Larissa Nogueira',      nick: 'larih',       time: 'Team Spirit' },
-        { nome: 'Matheus Oliveira',      nick: 'matt_ow',     time: 'Legacy' },
-        { nome: 'Natalia Vieira',        nick: 'natpop',      time: 'MOUZ' },
-        { nome: 'Otavio Barreto',        nick: 'otavz',       time: 'Team Falcons' }
+        { nome: 'Ana Beatriz Souza',     nick: 'zywoo_GOAT',  time: 'FURIA',            pontuacao: 96 },
+        { nome: 'Bruno Carvalho',        nick: 's1mple_fan',  time: 'Team Vitality',    pontuacao: 92 },
+        { nome: 'Carla Mendes',          nick: 'cologne_2014',time: 'MIBR',             pontuacao: 88 },
+        { nome: 'Diego Ribeiro',         nick: 'awp_andy',    time: 'paiN Gaming',      pontuacao: 84 },
+        { nome: 'Eduarda Lima',          nick: 'FalleN_BR',   time: 'Natus Vincere',    pontuacao: 80 },
+        { nome: 'Felipe Andrade',        nick: 'furia4ever',  time: 'BIG',              pontuacao: 76 },
+        { nome: 'Gustavo Pereira',       nick: 'mongolz_fan', time: 'The MongolZ',      pontuacao: 68 },
+        { nome: 'Helena Martins',        nick: 'kscerato_25', time: 'FURIA',            pontuacao: 60 },
+        { nome: 'Igor Almeida',          nick: 'niko_carry',  time: 'G2 Esports',       pontuacao: 56 },
+        { nome: 'Julia Castro',          nick: 'astralis_4',  time: 'Astralis',         pontuacao: 48 },
+        { nome: 'Kauan Felipe',          nick: 'kauanzera',   time: 'MIBR',             pontuacao: 42 },
+        { nome: 'Larissa Nogueira',      nick: 'donk_19',     time: 'Team Spirit',      pontuacao: 36 },
+        { nome: 'Matheus Oliveira',      nick: 'legacy_BR',   time: 'Legacy',           pontuacao: 28 },
+        { nome: 'Natalia Vieira',        nick: 'mouz_eu',     time: 'MOUZ',             pontuacao: 20 },
+        { nome: 'Otavio Barreto',        nick: 'falcons_oil', time: 'Team Falcons',     pontuacao: 12 }
     ];
 
     var agora = Date.now();
@@ -204,42 +204,34 @@ function carregarDadosExemplo() {
     var usuarios = EXEMPLOS.map(function (ex, i) {
         var ts = agora - (diasAtras[i] * UM_DIA) - (i * 60 * 1000);
         return {
-            id:       ts,
-            nome:     ex.nome,
-            email:    ex.nick + '@exemplo.com',
-            senha:    'demo1234',
-            nick:     ex.nick,
-            time:     ex.time,
-            dataNasc: '2000-01-01',
-            data:     new Date(ts).toLocaleString('pt-BR')
+            id:        ts,
+            nome:      ex.nome,
+            email:     ex.nick + '@exemplo.com',
+            senha:     'demo1234',
+            nick:      ex.nick,
+            time:      ex.time,
+            dataNasc:  '2000-01-01',
+            data:      new Date(ts).toLocaleString('pt-BR'),
+            pontuacao: ex.pontuacao
         };
     });
     salvarUsuarios(usuarios);
 
-    var PARTIDAS_BASE = [
-        { campo: 'p1', confronto: 'GamerLegion vs NRG',           opcoes: ['GamerLegion', 'NRG'] },
-        { campo: 'p2', confronto: 'B8 vs TYLOO',                  opcoes: ['B8', 'TYLOO'] },
-        { campo: 'p3', confronto: 'HEROIC vs Sharks',             opcoes: ['HEROIC', 'Sharks'] },
-        { campo: 'p4', confronto: 'BetBoom vs Gaimin Gladiators', opcoes: ['BetBoom', 'Gaimin Gladiators'] },
-        { campo: 'p5', confronto: 'BIG vs Team Liquid',           opcoes: ['BIG', 'Team Liquid'] },
-        { campo: 'p6', confronto: 'M80 vs Lynn Vision',           opcoes: ['M80', 'Lynn Vision'] },
-        { campo: 'p7', confronto: 'MIBR vs THUNDERdOWNUNDER',     opcoes: ['MIBR', 'THUNDERdOWNUNDER'] },
-        { campo: 'p8', confronto: 'SINNERS vs FlyQuest',          opcoes: ['SINNERS', 'FlyQuest'] }
-    ];
+    /* previsões de pick'em — formato novo (stage2 + top8 + campeão) */
     var COM_PICKEM = [0, 1, 2, 4, 5, 7, 10, 11, 13];
     var previsoes = COM_PICKEM.map(function (idx) {
         var u  = usuarios[idx];
         var ts = u.id + 5 * 60 * 1000;
         return {
             email:     u.email,
-            campeao:   u.time,
-            partidas:  PARTIDAS_BASE.map(function (p, j) {
-                return {
-                    campo:     p.campo,
-                    confronto: p.confronto,
-                    escolha:   p.opcoes[(idx + j) % 2]
-                };
-            }),
+            stage2: {
+                s2_30_a: ['Team Vitality','Natus Vincere','The MongolZ'][idx % 3],
+                s2_30_b: ['MOUZ','FURIA','Team Falcons'][idx % 3],
+                s2_03_a: ['THUNDERdOWNUNDER','Sharks','Lynn Vision'][idx % 3],
+                s2_03_b: ['M80','SINNERS','TYLOO'][idx % 3]
+            },
+            top8: ['Team Vitality','Natus Vincere','The MongolZ','Team Falcons','MOUZ','FURIA','Team Spirit','G2 Esports'],
+            campeao: u.time,
             dataSalvo: new Date(ts).toLocaleString('pt-BR')
         };
     });

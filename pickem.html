@@ -3,383 +3,479 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Pick'em da comunidade — faça suas previsões para o IEM Cologne Major 2026.">
+  <meta name="description" content="Pick'em Challenge do IEM Cologne Major 2026 — preveja os resultados de cada stage e dispute pontos no leaderboard.">
   <title>Pick'em — IEM Cologne Major 2026</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .page-head {
-      padding: 48px 0 32px;
-      border-bottom: 1px solid var(--line);
-      margin-bottom: 40px;
-    }
-    .page-head-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-    .page-head h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(36px, 5vw, 60px);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      margin-bottom: 8px;
-    }
-    .page-head p { font-size: 15px; color: var(--ink-dim); max-width: 600px; }
-
-    /* Auth gate */
+    /* ====== PICKEM PAGE ====== */
     #aviso-login {
-      background: var(--bg-1);
-      border: 1px solid var(--line-strong);
-      border-radius: var(--radius);
-      padding: 48px 40px;
-      text-align: center;
-      max-width: 480px;
-      margin: 0 auto 48px;
+      max-width: 480px; margin: 48px auto;
+      background: var(--bg-1); border: 1px solid var(--line-strong);
+      border-radius: var(--radius); padding: 40px 32px; text-align: center;
     }
-    #aviso-login svg { color: var(--accent); margin-bottom: 20px; }
+    #aviso-login svg { color: var(--accent); margin-bottom: 16px; }
     #aviso-login h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 22px; text-transform: uppercase; margin-bottom: 8px;
     }
     #aviso-login p { font-size: 14px; color: var(--ink-dim); margin-bottom: 24px; }
     #aviso-login .auth-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    /* Form area */
-    #form-pickem-area {
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 24px;
+    /* 4 KPIs */
+    .pk-kpis {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      margin-bottom: 24px;
+    }
+    .pk-kpi {
+      background: var(--bg-1); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .pk-kpi .l {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .pk-kpi .v {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 28px; line-height: 1; color: var(--ink);
+    }
+    .pk-kpi.accent .v { color: var(--accent); }
+    @media (max-width: 900px) { .pk-kpis { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .pk-kpis { grid-template-columns: 1fr; } }
+
+    /* Two-column layout */
+    .pk-layout {
+      display: grid; grid-template-columns: 1fr 340px; gap: 20px;
       align-items: start;
-      margin-bottom: 48px;
+    }
+    @media (max-width: 1024px) { .pk-layout { grid-template-columns: 1fr; } }
+
+    /* Stage sections */
+    .pk-stage {
+      background: var(--bg-1); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+    }
+    .pk-stage.locked { opacity: 0.95; }
+    .stage-head {
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap;
+      padding-bottom: 14px; margin-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .stage-head h2 {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 0;
+    }
+    .stage-badge-pts {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 3px;
+      color: var(--warn); background: rgba(255,154,60,0.12);
+      border: 1px solid rgba(255,154,60,0.3);
+    }
+    .stage-deadline {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .stage-status {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-mute);
     }
 
-    /* Champion pick */
-    #pick-campeao-area {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-    #pick-campeao-area h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-    #pick-campeao-area p { font-size: 13px; color: var(--ink-dim); margin-bottom: 16px; }
-    #pick-campeao-area label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    .pick-group { margin-bottom: 16px; }
+    .pick-group:last-child { margin-bottom: 0; }
+    .pick-label {
+      display: block; margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase;
       color: var(--ink-dim);
-      display: block;
-      margin-bottom: 6px;
     }
-    #pick-campeao {
+    .pick-label .pts {
+      color: var(--accent); margin-left: 4px;
+    }
+
+    /* Locked pick cards (Stage 1 display) */
+    .pick-cards {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    }
+    .pick-card {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-2); border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .pick-card .logo {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line-strong);
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 10px; letter-spacing: 0.04em;
+    }
+    .pick-card .name {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+      flex: 1;
+    }
+    .pick-card .check {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 18px;
+    }
+    .pick-card.correct {
+      border-color: rgba(46,204,113,0.5);
+      background: rgba(46,204,113,0.06);
+    }
+    .pick-card.correct .check { color: var(--win); }
+    .pick-card.wrong {
+      border-color: rgba(231,76,60,0.5);
+      background: rgba(231,76,60,0.06);
+    }
+    .pick-card.wrong .check { color: var(--loss); }
+
+    /* Active pick selectors (Stage 2 / Playoffs dropdowns) */
+    .pick-select {
       width: 100%;
-      box-sizing: border-box;
-      background: var(--bg-2);
+      padding: 12px 14px;
+      background: var(--bg-2); border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      font-size: 15px; letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    .pick-select:focus { border-color: var(--accent); outline: none; }
+    .pick-selects-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    @media (max-width: 480px) { .pick-selects-row { grid-template-columns: 1fr; } }
+
+    /* Top-8 grid (Stage 3 checkboxes) */
+    .top8-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    }
+    @media (max-width: 768px) { .top8-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 480px) { .top8-grid { grid-template-columns: repeat(2, 1fr); } }
+    .top8-cell input { display: none; }
+    .top8-cell label {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px;
+      background: var(--bg-2); border: 1px solid var(--line);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .top8-cell label:hover { border-color: var(--line-strong); }
+    .top8-cell input:checked + label {
+      border-color: var(--accent);
+      background: rgba(255,224,59,0.08);
+    }
+    .top8-cell .logo {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line-strong);
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 9px;
+    }
+    .top8-cell .name {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+
+    /* Sidebar */
+    .pk-side { position: sticky; top: 16px; }
+    .pk-leaderboard, .pk-scoring {
+      background: var(--bg-1); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 18px;
+      margin-bottom: 16px;
+    }
+    .lb-head, .sc-head {
+      display: flex; align-items: center; gap: 10px;
+      padding-bottom: 12px; margin-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lb-head h2, .sc-head h3 {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase;
+      margin: 0;
+    }
+    .lb-tabs { margin-left: auto; display: flex; gap: 4px; }
+    .lb-tab {
+      padding: 4px 10px;
+      background: transparent; border: 1px solid var(--line);
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-dim);
+      cursor: pointer;
+    }
+    .lb-tab.active {
+      background: var(--accent); color: var(--bg-0); border-color: var(--accent);
+      font-weight: 700;
+    }
+    .lb-list { list-style: none; padding: 0; margin: 0; }
+    .lb-row {
+      display: grid; grid-template-columns: 24px 32px 1fr auto; align-items: center;
+      gap: 10px; padding: 8px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lb-row:last-child { border-bottom: 0; }
+    .lb-row.me { background: rgba(255,224,59,0.06); border-radius: 4px; }
+    .lb-row .rank {
+      font-family: 'JetBrains Mono', monospace; font-weight: 600;
+      font-size: 13px; color: var(--ink-mute); text-align: center;
+    }
+    .lb-row .av {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--win); color: var(--bg-0);
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 11px; letter-spacing: 0.04em;
+    }
+    .lb-row .nick {
+      font-family: 'JetBrains Mono', monospace; font-weight: 500;
+      font-size: 13px; color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .lb-row .pts {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 16px; color: var(--ink);
+    }
+    .lb-row .pts .me-label { display:none; }
+
+    /* Scoring card */
+    .sc-list { list-style: none; padding: 0; margin: 0; }
+    .sc-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sc-list li:last-child { border-bottom: 0; }
+    .sc-list .rule {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: var(--ink-dim); letter-spacing: 0.06em;
+    }
+    .sc-list .pts {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 16px; color: var(--accent);
+    }
+
+    /* Sticky bottom action bar */
+    .pk-actionbar {
+      position: sticky; bottom: 0;
+      margin-top: 16px;
+      padding: 14px 20px;
+      background: var(--bg-1);
       border: 1px solid var(--line-strong);
       border-radius: var(--radius);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 11px 14px;
-      outline: none;
-      cursor: pointer;
-      transition: border-color .2s;
+      display: flex; align-items: center; gap: 16px;
+      flex-wrap: wrap;
+      z-index: 50;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.35);
     }
-    #pick-campeao:focus { border-color: var(--accent); }
+    .actionbar-info {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--ink-dim); letter-spacing: 0.06em;
+    }
+    .actionbar-info strong { color: var(--ink); }
+    .actionbar-btns { margin-left: auto; display: flex; gap: 10px; }
 
-    /* Match picks */
-    .picks-panel {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
+    /* Saved message */
+    .pk-saved-msg {
+      margin-top: 12px; padding: 10px 14px;
+      background: rgba(46,204,113,0.1);
+      border: 1px solid rgba(46,204,113,0.3);
       border-radius: var(--radius);
-      overflow: hidden;
-    }
-    .picks-panel-head {
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--line);
-      background: var(--bg-2);
-    }
-    .picks-panel-head h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .picks-panel-head p { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
-
-    .confronto {
-      border-bottom: 1px solid var(--line);
-      padding: 16px 24px;
-    }
-    .confronto:last-of-type { border-bottom: none; }
-    .confronto h3 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--ink-dim);
-      margin-bottom: 10px;
-    }
-    .confronto fieldset {
-      border: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .confronto legend { display: none; }
-    .confronto label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-2);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink-dim);
-      transition: border-color .15s, color .15s, background .15s;
-    }
-    .confronto label:hover { border-color: var(--line-strong); color: var(--ink); }
-    .confronto input[type="radio"] { display: none; }
-    .confronto input[type="radio"]:checked + * { display: none; }
-    .confronto label:has(input[type="radio"]:checked) {
-      border-color: var(--accent);
-      background: rgba(255,224,59,.08);
-      color: var(--ink);
-    }
-    .confronto label img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    /* Submit button */
-    .picks-submit {
-      padding: 16px 24px;
-      border-top: 1px solid var(--line);
-      background: var(--bg-2);
-    }
-    .picks-submit .btn { width: 100%; justify-content: center; }
-
-    /* Saved picks sidebar */
-    #previsoes-salvas {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-    #previsoes-salvas h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--line);
-      background: var(--bg-2);
-    }
-    #previsoes-conteudo { padding: 16px 24px; font-size: 14px; color: var(--ink-dim); }
-
-    @media (max-width: 900px) {
-      #form-pickem-area { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 768px) {
-      .confronto fieldset { grid-template-columns: 1fr; }
-      #aviso-login { padding: 32px 24px; }
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--win);
     }
   </style>
 </head>
 <body data-page="pickem">
+
   <div id="site-nav"></div>
 
-  <main class="container">
-    <div class="page-head">
-      <p class="page-head-eyebrow">Comunidade</p>
-      <h1>Pick'em</h1>
-      <p>Faça seus palpites e mostre que você conhece o cenário competitivo de CS2.</p>
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="crumbs"><a href="index.html">Major Hub</a><span class="sep">/</span><span>Pick'em</span></div>
+      <h1 class="page-title"><span class="accent">Pick'em</span><br>Challenge</h1>
+      <p class="page-sub">Faça suas previsões para cada stage e dispute pontos no ranking. Picks travam quando cada stage começa.</p>
     </div>
+  </header>
 
-    <!-- Auth gate -->
-    <section id="aviso-login">
-      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-      <h2>Login necessário</h2>
-      <p>Você precisa estar logado para participar do Pick'em da comunidade.</p>
-      <div class="auth-btns">
-        <a href="login.html" class="btn primary">Entrar</a>
-        <a href="cadastro.html" class="btn ghost">Criar conta</a>
-      </div>
-    </section>
+  <main>
+    <section class="block">
 
-    <!-- Form + saved picks -->
-    <div id="form-pickem-area" hidden>
-      <div>
-        <!-- Champion -->
-        <section id="pick-campeao-area">
-          <h2>Campeão do Major</h2>
-          <p>Qual time vai erguer o troféu em Colônia?</p>
-          <form id="form-pickem">
-            <label for="pick-campeao">Time campeão</label>
-            <select id="pick-campeao" name="campeao" required>
-              <option value="">Selecione um time</option>
-              <optgroup label="Legends Stage">
-                <option value="Team Vitality">Team Vitality</option>
-                <option value="Natus Vincere">Natus Vincere</option>
-                <option value="The MongolZ">The MongolZ</option>
-                <option value="Team Falcons">Team Falcons</option>
-                <option value="MOUZ">MOUZ</option>
-                <option value="FURIA">FURIA</option>
-                <option value="PARIVISION">PARIVISION</option>
-                <option value="Aurora Gaming">Aurora Gaming</option>
-              </optgroup>
-              <optgroup label="Challengers Stage">
-                <option value="Team Spirit">Team Spirit</option>
-                <option value="G2 Esports">G2 Esports</option>
-                <option value="Astralis">Astralis</option>
-                <option value="paiN Gaming">paiN Gaming</option>
-                <option value="Monte">Monte</option>
-                <option value="FUT Esports">FUT Esports</option>
-                <option value="9z Team">9z Team</option>
-                <option value="Legacy">Legacy</option>
-              </optgroup>
-              <optgroup label="Contenders Stage">
-                <option value="GamerLegion">GamerLegion</option>
-                <option value="Team Liquid">Team Liquid</option>
-                <option value="HEROIC">HEROIC</option>
-                <option value="BIG">BIG</option>
-                <option value="MIBR">MIBR</option>
-                <option value="NRG">NRG</option>
-                <option value="BetBoom">BetBoom</option>
-                <option value="Gaimin Gladiators">Gaimin Gladiators</option>
-                <option value="B8">B8</option>
-                <option value="M80">M80</option>
-                <option value="SINNERS">SINNERS</option>
-                <option value="FlyQuest">FlyQuest</option>
-                <option value="TYLOO">TYLOO</option>
-                <option value="Lynn Vision">Lynn Vision</option>
-                <option value="Sharks">Sharks</option>
-                <option value="THUNDERdOWNUNDER">THUNDERdOWNUNDER</option>
-              </optgroup>
-            </select>
+      <!-- Auth gate -->
+      <section id="aviso-login" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <h2>Login necessário</h2>
+        <p>Você precisa estar logado para participar do Pick'em Challenge.</p>
+        <div class="auth-btns">
+          <a href="login.html" class="btn primary">Entrar</a>
+          <a href="cadastro.html" class="btn ghost">Criar conta</a>
+        </div>
+      </section>
 
-            <!-- Opening matches -->
-            <section id="picks-abertura" class="picks-panel" style="margin-top:20px;">
-              <div class="picks-panel-head">
-                <h2>Partidas de Abertura</h2>
-                <p>6 de junho de 2026 — Escolha o vencedor</p>
+      <!-- Pick'em area -->
+      <div id="form-pickem-area" hidden>
+
+        <!-- 4 KPIs -->
+        <div class="pk-kpis">
+          <div class="pk-kpi accent">
+            <span class="l">Sua pontuação</span>
+            <span class="v" id="kpi-pontos">0 pts</span>
+          </div>
+          <div class="pk-kpi">
+            <span class="l">Ranking global</span>
+            <span class="v" id="kpi-rank">—</span>
+          </div>
+          <div class="pk-kpi">
+            <span class="l">Picks corretos</span>
+            <span class="v" id="kpi-corretos">3 / 12</span>
+          </div>
+          <div class="pk-kpi">
+            <span class="l">Próximo prazo</span>
+            <span class="v" id="kpi-prazo">11h 23m</span>
+          </div>
+        </div>
+
+        <div class="pk-layout">
+
+          <!-- LEFT: stages -->
+          <form id="form-pickem" class="pk-stages">
+
+            <!-- Stage 1 — locked, sample picks -->
+            <section class="pk-stage locked" data-stage="stage1">
+              <div class="stage-head">
+                <h2>Stage 1 · Swiss</h2>
+                <span class="stage-badge-pts">Locked · 20 pts</span>
+                <span class="stage-status">Picks finalizados</span>
               </div>
-
-              <article class="confronto">
-                <h3>GamerLegion vs NRG</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p1" value="GamerLegion" required><img src="assets/img/gamerlegion.png" alt=""> GamerLegion</label>
-                  <label><input type="radio" name="p1" value="NRG"><img src="assets/img/nrg.png" alt=""> NRG</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>B8 vs TYLOO</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p2" value="B8" required><img src="assets/img/b8.png" alt=""> B8</label>
-                  <label><input type="radio" name="p2" value="TYLOO"><img src="assets/img/tyloo.png" alt=""> TYLOO</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>HEROIC vs Sharks</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p3" value="HEROIC" required><img src="assets/img/heroic.png" alt=""> HEROIC</label>
-                  <label><input type="radio" name="p3" value="Sharks"><img src="assets/img/sharks.png" alt=""> Sharks</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>BetBoom vs Gaimin Gladiators</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p4" value="BetBoom" required><img src="assets/img/betboom.png" alt=""> BetBoom</label>
-                  <label><input type="radio" name="p4" value="Gaimin Gladiators"><img src="assets/img/gaimingladiators.png" alt=""> Gaimin Gladiators</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>BIG vs Team Liquid</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p5" value="BIG" required><img src="assets/img/big.png" alt=""> BIG</label>
-                  <label><input type="radio" name="p5" value="Team Liquid"><img src="assets/img/liquid.png" alt=""> Team Liquid</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>M80 vs Lynn Vision</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p6" value="M80" required><img src="assets/img/m80.png" alt=""> M80</label>
-                  <label><input type="radio" name="p6" value="Lynn Vision"><img src="assets/img/lynnvision.png" alt=""> Lynn Vision</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>MIBR vs THUNDERdOWNUNDER</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p7" value="MIBR" required><img src="assets/img/mibr.png" alt=""> MIBR</label>
-                  <label><input type="radio" name="p7" value="THUNDERdOWNUNDER"><img src="assets/img/thunderdownunder.png" alt=""> THUNDERdOWNUNDER</label>
-                </fieldset>
-              </article>
-
-              <article class="confronto">
-                <h3>SINNERS vs FlyQuest</h3>
-                <fieldset>
-                  <legend>Vencedor</legend>
-                  <label><input type="radio" name="p8" value="SINNERS" required><img src="assets/img/sinners.png" alt=""> SINNERS</label>
-                  <label><input type="radio" name="p8" value="FlyQuest"><img src="assets/img/flyquest.png" alt=""> FlyQuest</label>
-                </fieldset>
-              </article>
-
-              <div class="picks-submit">
-                <button type="submit" class="btn primary">Salvar Pick'em</button>
+              <div class="pick-group">
+                <span class="pick-label">3 — 0 (qualificados rápidos) <span class="pts">· 8 pts cada</span></span>
+                <div class="pick-cards">
+                  <div class="pick-card correct"><span class="logo">VIT</span><span class="name">Vitality</span><span class="check">✓</span></div>
+                  <div class="pick-card correct"><span class="logo">NAV</span><span class="name">NAVI</span><span class="check">✓</span></div>
+                </div>
+              </div>
+              <div class="pick-group">
+                <span class="pick-label">0 — 3 (eliminados rápidos) <span class="pts">· 4 pts cada</span></span>
+                <div class="pick-cards">
+                  <div class="pick-card wrong"><span class="logo">M80</span><span class="name">M80</span><span class="check">✗</span></div>
+                  <div class="pick-card correct"><span class="logo">FUR</span><span class="name">FURIA</span><span class="check">✓</span></div>
+                </div>
               </div>
             </section>
+
+            <!-- Stage 2 — open -->
+            <section class="pk-stage" data-stage="stage2">
+              <div class="stage-head">
+                <h2>Stage 2 · Swiss</h2>
+                <span class="stage-deadline">Fecha em 12h</span>
+                <span class="stage-status" id="status-stage2">0 / 4 picks</span>
+              </div>
+              <div class="pick-group">
+                <span class="pick-label">3 — 0 (qualificados rápidos) <span class="pts">· 8 pts cada</span></span>
+                <div class="pick-selects-row">
+                  <select class="pick-select" name="s2_30_a" data-stage="stage2">
+                    <option value="">Selecione um time</option>
+                  </select>
+                  <select class="pick-select" name="s2_30_b" data-stage="stage2">
+                    <option value="">Selecione um time</option>
+                  </select>
+                </div>
+              </div>
+              <div class="pick-group">
+                <span class="pick-label">0 — 3 (eliminados rápidos) <span class="pts">· 4 pts cada</span></span>
+                <div class="pick-selects-row">
+                  <select class="pick-select" name="s2_03_a" data-stage="stage2">
+                    <option value="">Selecione um time</option>
+                  </select>
+                  <select class="pick-select" name="s2_03_b" data-stage="stage2">
+                    <option value="">Selecione um time</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <!-- Stage 3 — open -->
+            <section class="pk-stage" data-stage="stage3">
+              <div class="stage-head">
+                <h2>Stage 3 · Legends</h2>
+                <span class="stage-deadline">Fecha em 6d</span>
+                <span class="stage-status" id="status-stage3">0 / 8 picks</span>
+              </div>
+              <div class="pick-group">
+                <span class="pick-label">Top 8 que avançam aos Playoffs <span class="pts">· 2 pts cada</span></span>
+                <div class="top8-grid" id="top8-grid"></div>
+              </div>
+            </section>
+
+            <!-- Playoffs — open -->
+            <section class="pk-stage" data-stage="playoffs">
+              <div class="stage-head">
+                <h2>Playoffs</h2>
+                <span class="stage-deadline">Fecha em 24d</span>
+                <span class="stage-status" id="status-playoffs">0 / 1 picks</span>
+              </div>
+              <div class="pick-group">
+                <span class="pick-label">Campeão do Major <span class="pts">· 40 pts</span></span>
+                <select class="pick-select" name="campeao" id="pick-campeao" data-stage="playoffs">
+                  <option value="">Selecione o campeão</option>
+                </select>
+              </div>
+            </section>
+
+            <div class="pk-saved-msg" id="pk-saved-msg" hidden></div>
           </form>
-        </section>
+
+          <!-- RIGHT: leaderboard + scoring -->
+          <aside class="pk-side">
+
+            <div class="pk-leaderboard">
+              <div class="lb-head">
+                <h2>Leaderboard</h2>
+                <div class="lb-tabs">
+                  <button class="lb-tab active" type="button" data-tab="global">Global</button>
+                  <button class="lb-tab" type="button" data-tab="amigos">Amigos</button>
+                </div>
+              </div>
+              <ol class="lb-list" id="lb-list"></ol>
+            </div>
+
+            <div class="pk-scoring">
+              <div class="sc-head">
+                <h3>Como pontuar</h3>
+              </div>
+              <ul class="sc-list">
+                <li><span class="rule">Pick de 3 — 0</span><span class="pts">8 pts</span></li>
+                <li><span class="rule">Pick de 0 — 3</span><span class="pts">4 pts</span></li>
+                <li><span class="rule">Top 8 (Stage 3)</span><span class="pts">2 pts cada</span></li>
+                <li><span class="rule">Campeão correto</span><span class="pts">40 pts</span></li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Sticky bottom bar -->
+        <div class="pk-actionbar">
+          <span class="actionbar-info">
+            <strong>Stage 2:</strong> <span id="ab-count">0 / 4</span> picks · 12h restantes
+          </span>
+          <div class="actionbar-btns">
+            <button type="button" id="btn-resetar" class="btn ghost">Resetar</button>
+            <button type="submit" form="form-pickem" id="btn-salvar" class="btn primary">Salvar picks</button>
+          </div>
+        </div>
       </div>
 
-      <!-- Saved picks sidebar -->
-      <section id="previsoes-salvas" hidden>
-        <h2>Suas Previsões</h2>
-        <div id="previsoes-conteudo"></div>
-      </section>
-    </div>
-
+    </section>
   </main>
 
   <div id="site-foot"></div>
