@@ -80,6 +80,83 @@ header nav li:last-child a {
     color: var(--cor-laranja);
 }
 
+/* ============ PERFIL USUÁRIO (header) ============ */
+#perfil-usuario {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.3rem 0.75rem;
+    background: var(--cor-navy);
+    border: 1px solid var(--cor-divider);
+    font-size: 0.82rem;
+}
+
+#perfil-usuario strong {
+    color: var(--cor-laranja);
+    font-family: var(--fonte-titulo);
+    font-size: 0.9rem;
+    letter-spacing: 0.03em;
+}
+
+#perfil-usuario > span > span {
+    color: var(--cor-cinza-medio);
+}
+
+#perfil-usuario button {
+    padding: 0.2rem 0.55rem;
+    background: transparent;
+    color: var(--cor-cinza-medio);
+    border: 1px solid var(--cor-divider);
+    font-family: var(--fonte-corpo);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#perfil-usuario button:hover {
+    border-color: var(--cor-laranja);
+    color: var(--cor-laranja);
+}
+
+/* ============ ADMIN — info expandida por usuário ============ */
+.usuario-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 1rem;
+    flex: 1;
+}
+
+.usuario-nome {
+    font-family: var(--fonte-titulo);
+    font-size: 0.95rem;
+    color: var(--cor-off-white);
+    font-weight: 500;
+}
+
+.usuario-email {
+    font-size: 0.83rem;
+    color: var(--cor-cinza-medio);
+}
+
+.usuario-nick {
+    font-size: 0.8rem;
+    color: var(--cor-laranja);
+}
+
+.usuario-time {
+    font-size: 0.8rem;
+    color: var(--cor-cinza-medio);
+    font-style: italic;
+}
+
+.usuario-data {
+    font-size: 0.75rem;
+    color: var(--cor-divider);
+}
+
 /* ============ MAIN ============ */
 main {
     flex: 1;

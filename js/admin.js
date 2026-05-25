@@ -9,82 +9,105 @@ function salvarUsuarios(usuarios) {
 }
 
 function criarItemLista(usuario) {
-    const li = document.createElement('li');
+    var li = document.createElement('li');
+    li.dataset.id    = usuario.id;
+    li.dataset.nome  = usuario.nome.toLowerCase();
+    li.dataset.email = usuario.email.toLowerCase();
 
-    const info = document.createElement('span');
-    info.textContent = usuario.nome + ' — ' + usuario.email + ' (' + usuario.data + ')';
-    info.dataset.nome = usuario.nome.toLowerCase();
-    info.dataset.email = usuario.email.toLowerCase();
+    var info = document.createElement('div');
+    info.className = 'usuario-info';
 
-    const btnExcluir = document.createElement('button');
-    btnExcluir.type = 'button';
+    var nomeEl = document.createElement('span');
+    nomeEl.className   = 'usuario-nome';
+    nomeEl.textContent = usuario.nome;
+    info.appendChild(nomeEl);
+
+    var emailEl = document.createElement('span');
+    emailEl.className   = 'usuario-email';
+    emailEl.textContent = usuario.email;
+    info.appendChild(emailEl);
+
+    if (usuario.nick) {
+        var nickEl = document.createElement('span');
+        nickEl.className   = 'usuario-nick';
+        nickEl.textContent = 'Steam: ' + usuario.nick;
+        info.appendChild(nickEl);
+    }
+
+    if (usuario.time) {
+        var timeEl = document.createElement('span');
+        timeEl.className   = 'usuario-time';
+        timeEl.textContent = usuario.time;
+        info.appendChild(timeEl);
+    }
+
+    var dataEl = document.createElement('span');
+    dataEl.className   = 'usuario-data';
+    dataEl.textContent = usuario.data;
+    info.appendChild(dataEl);
+
+    var btnExcluir = document.createElement('button');
+    btnExcluir.type        = 'button';
     btnExcluir.textContent = 'Excluir';
     btnExcluir.addEventListener('click', function () {
         excluirUsuario(usuario.id, li);
     });
 
-    li.dataset.id = usuario.id;
     li.appendChild(info);
     li.appendChild(btnExcluir);
     return li;
 }
 
 function renderizarLista() {
-    const lista = document.getElementById('lista-usuarios');
+    var lista = document.getElementById('lista-usuarios');
     while (lista.firstChild) {
         lista.removeChild(lista.firstChild);
     }
-    const usuarios = lerUsuarios();
-    usuarios.forEach(function (usuario) {
+    lerUsuarios().forEach(function (usuario) {
         lista.appendChild(criarItemLista(usuario));
     });
 }
 
 function cadastrarUsuario(e) {
     e.preventDefault();
-    const nome = document.getElementById('input-nome').value.trim();
-    const email = document.getElementById('input-email').value.trim();
+    var nome  = document.getElementById('input-nome').value.trim();
+    var email = document.getElementById('input-email').value.trim();
     if (!nome || !email) return;
 
-    const usuario = {
-        id: Date.now(),
-        nome: nome,
+    var usuario = {
+        id:    Date.now(),
+        nome:  nome,
         email: email,
-        data: new Date().toLocaleString('pt-BR')
+        data:  new Date().toLocaleString('pt-BR')
     };
 
-    const usuarios = lerUsuarios();
+    var usuarios = lerUsuarios();
     usuarios.push(usuario);
     salvarUsuarios(usuarios);
 
-    const lista = document.getElementById('lista-usuarios');
-    lista.appendChild(criarItemLista(usuario));
-
+    document.getElementById('lista-usuarios').appendChild(criarItemLista(usuario));
     document.getElementById('form-admin').reset();
 }
 
 function excluirUsuario(id, li) {
     if (!confirm('Excluir este usuário?')) return;
-    const usuarios = lerUsuarios().filter(function (u) { return u.id !== id; });
-    salvarUsuarios(usuarios);
+    salvarUsuarios(lerUsuarios().filter(function (u) { return u.id !== id; }));
     li.parentNode.removeChild(li);
 }
 
 function limparTodos() {
     if (!confirm('Excluir todos os usuários cadastrados?')) return;
     localStorage.removeItem(CHAVE);
-    const lista = document.getElementById('lista-usuarios');
+    var lista = document.getElementById('lista-usuarios');
     while (lista.firstChild) {
         lista.removeChild(lista.firstChild);
     }
 }
 
 function pesquisar() {
-    const termo = document.getElementById('busca').value.toLowerCase();
-    const itens = document.getElementById('lista-usuarios').querySelectorAll('li');
-    itens.forEach(function (li) {
-        const info = li.querySelector('span');
-        const bate = info.dataset.nome.includes(termo) || info.dataset.email.includes(termo);
+    var termo = document.getElementById('busca').value.toLowerCase();
+    document.getElementById('lista-usuarios').querySelectorAll('li').forEach(function (li) {
+        var bate = li.dataset.nome.includes(termo) || li.dataset.email.includes(termo);
         li.style.display = bate ? '' : 'none';
     });
 }
