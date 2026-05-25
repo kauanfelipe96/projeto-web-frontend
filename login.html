@@ -1,55 +1,185 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Entrar na conta do Pick'em do IEM Cologne Major 2026.">
-    <title>Entrar — IEM Cologne Major 2026</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Entrar na conta do Pick'em do IEM Cologne Major 2026.">
+  <title>Entrar — IEM Cologne Major 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .auth-wrap {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: 1fr 480px;
+    }
+    .auth-side {
+      background: var(--bg-1);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-side::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 30% 50%, rgba(255,224,59,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .auth-side-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .auth-side h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .auth-side h1 span { color: var(--accent); }
+    .auth-side p { font-size: 15px; color: var(--ink-dim); max-width: 360px; line-height: 1.6; }
+    .auth-side-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .auth-side-stat strong {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .auth-side-stat span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-mute);
+    }
+
+    .auth-form-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 48px;
+      background: var(--bg-0);
+    }
+    .auth-form-wrap h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+    .auth-form-wrap .auth-sub {
+      font-size: 14px;
+      color: var(--ink-dim);
+      margin-bottom: 32px;
+    }
+    .form-field { margin-bottom: 20px; }
+    .form-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-dim);
+      margin-bottom: 8px;
+    }
+    .form-field input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg-1);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-field input:focus { border-color: var(--accent); }
+    .form-actions { margin-top: 8px; }
+    .form-actions .btn { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+    .auth-switch {
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--ink-mute);
+      text-align: center;
+    }
+    .auth-switch a { color: var(--accent-2); text-decoration: none; }
+    .auth-switch a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .auth-wrap { grid-template-columns: 1fr; }
+      .auth-side { display: none; }
+      .auth-form-wrap { padding: 40px 24px; min-height: calc(100vh - 64px); }
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <a href="index.html"><strong>IEM COLOGNE MAJOR 2026</strong></a>
-        <nav>
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="pickem.html">Pick'em</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="admin.html">Admin</a></li>
-            </ul>
-        </nav>
-    </header>
+<body data-page="login">
+  <div id="site-nav"></div>
 
-    <main>
-        <section id="login">
-            <h1>Entrar</h1>
-            <p>Acesse sua conta para acompanhar e enviar seus palpites do Pick'em.</p>
+  <div class="auth-wrap">
+    <div class="auth-side">
+      <p class="auth-side-eyebrow">Pick'em da Comunidade</p>
+      <h1>IEM Cologne <span>Major</span> 2026</h1>
+      <p>Entre com sua conta para fazer suas previsões e competir com a comunidade de CS2.</p>
+      <div class="auth-side-stats">
+        <div class="auth-side-stat">
+          <strong>$1.25M</strong>
+          <span>Prize Pool</span>
+        </div>
+        <div class="auth-side-stat">
+          <strong>32</strong>
+          <span>Times</span>
+        </div>
+        <div class="auth-side-stat">
+          <strong>Jun 2026</strong>
+          <span>Colônia</span>
+        </div>
+      </div>
+    </div>
 
-            <form action="index.html" method="get">
-                <label for="email">
-                    E-mail
-                    <input type="email" id="email" name="email" required autocomplete="email">
-                </label>
+    <div class="auth-form-wrap">
+      <h2>Entrar</h2>
+      <p class="auth-sub">Acesse sua conta para enviar seus palpites do Pick'em.</p>
 
-                <label for="senha">
-                    Senha
-                    <input type="password" id="senha" name="senha" required autocomplete="current-password">
-                </label>
+      <form id="form-login" action="index.html" method="get" novalidate>
+        <div class="form-field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="seu@email.com">
+        </div>
+        <div class="form-field">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Entrar</button>
+        </div>
+      </form>
 
-                <button type="submit">Entrar</button>
-            </form>
+      <p class="auth-switch">Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+    </div>
+  </div>
 
-            <p>Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a>.</p>
-        </section>
-    </main>
-
-    <footer>
-        <p><a href="https://www.linkedin.com/in/kauan-felipe-fullstack/" target="_blank" rel="noopener">Currículo (LinkedIn)</a></p>
-        <p><a href="https://github.com/kauanfelipe96/projeto-web-frontend" target="_blank" rel="noopener">Repositório no GitHub</a></p>
-        <p><small>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA — Projeto acadêmico, sem vínculo oficial com ESL ou Valve.</small></p>
-    </footer>
-    <script src="js/login.js"></script>
-    <script src="js/auth.js"></script>
+  <div id="site-foot"></div>
+  <script src="js/site.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

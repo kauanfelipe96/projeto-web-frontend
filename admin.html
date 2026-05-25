@@ -1,70 +1,330 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Painel administrativo do Pick'em da comunidade — IEM Cologne Major 2026.">
-    <title>Painel Administrativo — IEM Cologne Major 2026</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Painel administrativo do Pick'em da comunidade — IEM Cologne Major 2026.">
+  <title>Admin — IEM Cologne Major 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      padding: 40px 0 60px;
+    }
+    /* Sidebar */
+    .admin-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .admin-sidebar-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      padding: 0 12px;
+      margin-bottom: 4px;
+    }
+    .admin-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-dim);
+      text-decoration: none;
+      cursor: default;
+      transition: background .15s, color .15s;
+    }
+    .admin-nav-item.active {
+      background: rgba(255,224,59,.1);
+      color: var(--accent);
+    }
+    .admin-nav-item:not(.active):hover {
+      background: var(--bg-1);
+      color: var(--ink);
+    }
+
+    /* Main content */
+    .admin-main { min-width: 0; }
+    .admin-page-head {
+      margin-bottom: 28px;
+    }
+    .admin-page-head h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    .admin-page-head p { font-size: 14px; color: var(--ink-dim); }
+
+    /* KPI cards */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-mute);
+      margin-bottom: 8px;
+    }
+    .kpi-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .kpi-val.cyan { color: var(--accent-2); }
+
+    /* Panel */
+    .panel {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+    .panel-head {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .panel-head h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .panel-body { padding: 24px; }
+
+    /* Form */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-dim);
+      margin-bottom: 6px;
+    }
+    .form-field input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-field input:focus { border-color: var(--accent); }
+    .form-btn-row {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-sm { padding: 8px 16px; font-size: 13px; }
+
+    /* Search + actions */
+    .list-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      padding: 9px 12px 9px 36px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-mute);
+      pointer-events: none;
+    }
+
+    /* User list */
+    #lista-usuarios {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    #lista-usuarios li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+    #lista-usuarios li:last-child { border-bottom: none; }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-2);
+      border: 1px solid var(--line-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .user-info { flex: 1; }
+    .user-name { font-weight: 600; color: var(--ink); }
+    .user-email { font-size: 12px; color: var(--ink-mute); }
+
+    @media (max-width: 900px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { display: none; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .kpi-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <a href="index.html"><strong>IEM COLOGNE MAJOR 2026</strong></a>
-        <nav>
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="pickem.html">Pick'em</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="admin.html">Admin</a></li>
-            </ul>
-        </nav>
-    </header>
+<body data-page="admin">
+  <div id="site-nav"></div>
 
-    <main>
-        <section id="admin">
-            <h1>Painel Administrativo — Pick'em IEM Cologne</h1>
-            <p>Gerencie os participantes inscritos no Pick'em da comunidade.</p>
+  <div class="container">
+    <div class="admin-layout">
 
-            <form id="form-admin">
-                <label for="input-nome">
-                    Nome do usuário
-                    <input id="input-nome" name="nome" type="text" required>
-                </label>
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">Painel Admin</div>
+        <span class="admin-nav-item active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Usuários
+        </span>
+        <a href="pickem.html" class="admin-nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          Pick'em
+        </a>
+        <a href="index.html" class="admin-nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Voltar ao Hub
+        </a>
+      </aside>
 
-                <label for="input-email">
-                    E-mail
-                    <input id="input-email" name="email" type="email" required>
-                </label>
+      <!-- Main -->
+      <main class="admin-main">
+        <div class="admin-page-head">
+          <h1>Painel Administrativo</h1>
+          <p>Gerencie os participantes inscritos no Pick'em da comunidade.</p>
+        </div>
 
-                <div>
-                    <button id="btn-cadastrar" type="submit">Cadastrar</button>
-                    <button id="btn-limpar" type="button">Limpar campos</button>
+        <!-- KPIs -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Total de usuários</div>
+            <div class="kpi-val" id="kpi-total">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Com Pick'em</div>
+            <div class="kpi-val cyan" id="kpi-pickem">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Cadastros hoje</div>
+            <div class="kpi-val" id="kpi-hoje">—</div>
+          </div>
+        </div>
+
+        <!-- Cadastro rápido -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Cadastrar Usuário</h2>
+          </div>
+          <div class="panel-body">
+            <form id="form-admin" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="input-nome">Nome</label>
+                  <input id="input-nome" name="nome" type="text" required placeholder="Nome do usuário">
                 </div>
+                <div class="form-field">
+                  <label for="input-email">E-mail</label>
+                  <input id="input-email" name="email" type="email" required placeholder="email@exemplo.com">
+                </div>
+              </div>
+              <div class="form-btn-row">
+                <button id="btn-cadastrar" type="submit" class="btn primary btn-sm">Cadastrar</button>
+                <button id="btn-limpar" type="button" class="btn ghost btn-sm">Limpar</button>
+              </div>
             </form>
-        </section>
+          </div>
+        </div>
 
-        <section id="lista">
-            <h2>Participantes cadastrados</h2>
-
-            <div>
-                <label for="busca">
-                    Pesquisar
-                    <input id="busca" type="search" placeholder="Pesquisar por nome ou e-mail...">
-                </label>
-                <button id="btn-limpar-tudo" type="button">Excluir todos</button>
+        <!-- Lista de usuários -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Participantes</h2>
+            <button id="btn-limpar-tudo" type="button" class="btn ghost btn-sm">Excluir todos</button>
+          </div>
+          <div class="list-controls">
+            <div class="search-wrap">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <input id="busca" type="search" placeholder="Pesquisar por nome ou e-mail...">
             </div>
+          </div>
+          <ul id="lista-usuarios"></ul>
+        </div>
+      </main>
 
-            <ul id="lista-usuarios"></ul>
-        </section>
-    </main>
+    </div>
+  </div>
 
-    <footer>
-        <p><a href="https://www.linkedin.com/in/kauan-felipe-fullstack/" target="_blank" rel="noopener">Currículo (LinkedIn)</a></p>
-        <p><a href="https://github.com/kauanfelipe96/projeto-web-frontend" target="_blank" rel="noopener">Repositório no GitHub</a></p>
-        <p><small>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA — Projeto acadêmico, sem vínculo oficial com ESL ou Valve.</small></p>
-    </footer>
-    <script src="js/admin.js"></script>
-    <script src="js/auth.js"></script>
+  <div id="site-foot"></div>
+  <script src="js/site.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>
