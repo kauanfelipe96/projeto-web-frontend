@@ -1,4 +1,5 @@
 const CHAVE = 'pickem_usuarios';
+const CHAVE_PREVISOES = 'pickem_previsoes';
 
 const LOGOS = {
     'GamerLegion':       'gamerlegion.png',
@@ -95,6 +96,32 @@ function renderizarLista() {
     });
 }
 
+function atualizarKPIs() {
+    var usuarios  = lerUsuarios();
+    var previsoes = JSON.parse(localStorage.getItem(CHAVE_PREVISOES)) || [];
+    var emailsComPick = {};
+    previsoes.forEach(function (p) { emailsComPick[p.email] = true; });
+
+    var hoje = new Date();
+    var diaHoje = hoje.getDate();
+    var mesHoje = hoje.getMonth();
+    var anoHoje = hoje.getFullYear();
+
+    var totalHoje = 0;
+    var totalPickem = 0;
+    usuarios.forEach(function (u) {
+        if (emailsComPick[u.email]) totalPickem++;
+        var d = new Date(u.id);
+        if (d.getDate() === diaHoje && d.getMonth() === mesHoje && d.getFullYear() === anoHoje) {
+            totalHoje++;
+        }
+    });
+
+    document.getElementById('kpi-total').textContent  = usuarios.length;
+    document.getElementById('kpi-pickem').textContent = totalPickem;
+    document.getElementById('kpi-hoje').textContent   = totalHoje;
+}
+
 function cadastrarUsuario(e) {
     e.preventDefault();
     var nome  = document.getElementById('input-nome').value.trim();
@@ -114,12 +141,14 @@ function cadastrarUsuario(e) {
 
     document.getElementById('lista-usuarios').appendChild(criarItemLista(usuario));
     document.getElementById('form-admin').reset();
+    atualizarKPIs();
 }
 
 function excluirUsuario(id, li) {
     if (!confirm('Excluir este usuário?')) return;
     salvarUsuarios(lerUsuarios().filter(function (u) { return u.id !== id; }));
     li.parentNode.removeChild(li);
+    atualizarKPIs();
 }
 
 function limparTodos() {
@@ -129,6 +158,7 @@ function limparTodos() {
     while (lista.firstChild) {
         lista.removeChild(lista.firstChild);
     }
+    atualizarKPIs();
 }
 
 function pesquisar() {
@@ -149,4 +179,5 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-limpar-tudo').addEventListener('click', limparTodos);
     document.getElementById('busca').addEventListener('input', pesquisar);
     renderizarLista();
+    atualizarKPIs();
 });
