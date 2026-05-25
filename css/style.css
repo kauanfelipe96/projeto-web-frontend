@@ -775,19 +775,41 @@ table.data tbody tr:last-child td { border-bottom: none; }
   flex-wrap: wrap; margin-bottom: 24px;
 }
 .filters .grow { flex: 1; }
-.day-group { margin-bottom: 28px; }
+.day-group { margin-bottom: 32px; }
 .day-group-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 0; margin-bottom: 12px;
-  border-bottom: 1px solid var(--line);
+  display: flex; align-items: baseline; gap: 18px;
+  padding: 10px 0 14px; margin-bottom: 16px;
 }
 .day-group-header .date {
   font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
   font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase;
 }
+.day-group-header .day-date {
+  display: flex; align-items: baseline; gap: 14px;
+}
+.day-group-header .day-d {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 30px; line-height: 1; letter-spacing: 0.02em; text-transform: uppercase;
+  color: var(--ink);
+}
+.day-group-header .day-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.day-group-header .day-line {
+  flex: 1; height: 1px; background: var(--line); align-self: center;
+}
 .day-group-header .count {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; color: var(--ink-mute);
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-mute);
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .day-group-header { flex-wrap: wrap; gap: 10px; }
+  .day-group-header .day-d { font-size: 24px; }
+  .day-group-header .day-line { display: none; }
 }
 .match-list-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -974,12 +996,28 @@ table.data tbody tr:last-child td { border-bottom: none; }
   font-size: 14px; color: var(--ink);
 }
 .team-roster {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px;
-  color: var(--ink-dim);
-  text-align: center;
   border-top: 1px solid var(--line);
-  padding-top: 10px;
-  line-height: 1.6;
+  padding-top: 12px;
+}
+.team-roster .lineup-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.team-roster .lineup-players {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+}
+.team-roster .player {
+  font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  font-size: 12px; color: var(--ink);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 3px 8px;
+  white-space: nowrap;
 }
 
 /* ========= VENUE PAGE ========= */
