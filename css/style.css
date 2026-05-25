@@ -147,6 +147,9 @@ header nav li:last-child a {
 }
 
 .usuario-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     font-size: 0.8rem;
     color: var(--cor-cinza-medio);
     font-style: italic;
@@ -827,6 +830,27 @@ fieldset label img {
     color: var(--cor-cinza-medio);
     margin-top: 0.25rem;
 }
+
+.previsao-campeao {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.logo-mini {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 0.25rem;
+}
+
+.logo-campeao {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+}
+
 
 /* ============ RESPONSIVO ============ */
 @media (max-width: 768px) {

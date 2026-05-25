@@ -1,4 +1,4 @@
-var CHAVE_SESSAO   = 'usuario_logado';
+var CHAVE_SESSAO    = 'usuario_logado';
 var CHAVE_PREVISOES = 'pickem_previsoes';
 
 var CONFRONTOS = [
@@ -11,6 +11,35 @@ var CONFRONTOS = [
     { campo: 'p7', times: ['MIBR', 'THUNDERdOWNUNDER'] },
     { campo: 'p8', times: ['SINNERS', 'FlyQuest'] }
 ];
+
+var LOGOS = {
+    'GamerLegion':       'gamerlegion.png',
+    'NRG':               'nrg.png',
+    'B8':                'b8.png',
+    'TYLOO':             'tyloo.png',
+    'HEROIC':            'heroic.png',
+    'Sharks':            'sharks.png',
+    'BetBoom':           'betboom.png',
+    'Gaimin Gladiators': 'gaimingladiators.png',
+    'BIG':               'big.png',
+    'Team Liquid':       'liquid.png',
+    'M80':               'm80.png',
+    'Lynn Vision':       'lynnvision.png',
+    'MIBR':              'mibr.png',
+    'THUNDERdOWNUNDER':  'thunderdownunder.png',
+    'SINNERS':           'sinners.png',
+    'FlyQuest':          'flyquest.png'
+};
+
+function criarLogoEl(time, className) {
+    var filename = LOGOS[time];
+    if (!filename) return null;
+    var img = document.createElement('img');
+    img.src       = 'assets/img/' + filename;
+    img.alt       = 'Logo do ' + time;
+    img.className = className || 'logo-mini';
+    return img;
+}
 
 function lerPrevisoes() {
     return JSON.parse(localStorage.getItem(CHAVE_PREVISOES)) || [];
@@ -29,34 +58,37 @@ function preencherFormulario(picks) {
 }
 
 function renderizarPrevisoes(picks) {
-    var area = document.getElementById('previsoes-salvas');
+    var area     = document.getElementById('previsoes-salvas');
     var conteudo = document.getElementById('previsoes-conteudo');
 
     while (conteudo.firstChild) {
         conteudo.removeChild(conteudo.firstChild);
     }
 
-    var campeaoEl = document.createElement('p');
+    var campeaoEl    = document.createElement('p');
+    campeaoEl.className = 'previsao-campeao';
     var campeaoLabel = document.createElement('strong');
     campeaoLabel.textContent = 'Campeão: ';
-    var campeaoValor = document.createTextNode(picks.campeao);
     campeaoEl.appendChild(campeaoLabel);
-    campeaoEl.appendChild(campeaoValor);
+    var logoGrande = criarLogoEl(picks.campeao, 'logo-campeao');
+    if (logoGrande) campeaoEl.appendChild(logoGrande);
+    campeaoEl.appendChild(document.createTextNode(picks.campeao));
     conteudo.appendChild(campeaoEl);
 
     var lista = document.createElement('ul');
     picks.partidas.forEach(function (p) {
-        var li = document.createElement('li');
+        var li    = document.createElement('li');
         var label = document.createElement('strong');
         label.textContent = p.confronto + ': ';
-        var valor = document.createTextNode(p.escolha);
         li.appendChild(label);
-        li.appendChild(valor);
+        var logo = criarLogoEl(p.escolha, 'logo-mini');
+        if (logo) li.appendChild(logo);
+        li.appendChild(document.createTextNode(p.escolha));
         lista.appendChild(li);
     });
     conteudo.appendChild(lista);
 
-    var dataEl = document.createElement('p');
+    var dataEl       = document.createElement('p');
     dataEl.className = 'previsao-data';
     dataEl.textContent = 'Salvo em: ' + picks.dataSalvo;
     conteudo.appendChild(dataEl);
@@ -113,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('aviso-login').hidden = true;
     document.getElementById('form-pickem-area').hidden = false;
 
-    var usuario = JSON.parse(sessao);
+    var usuario        = JSON.parse(sessao);
     var picksExistentes = lerPrevisoes().find(function (p) { return p.email === usuario.email; });
 
     if (picksExistentes) {

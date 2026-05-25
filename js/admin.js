@@ -1,5 +1,24 @@
 const CHAVE = 'pickem_usuarios';
 
+const LOGOS = {
+    'GamerLegion':       'gamerlegion.png',
+    'NRG':               'nrg.png',
+    'B8':                'b8.png',
+    'TYLOO':             'tyloo.png',
+    'HEROIC':            'heroic.png',
+    'Sharks':            'sharks.png',
+    'BetBoom':           'betboom.png',
+    'Gaimin Gladiators': 'gaimingladiators.png',
+    'BIG':               'big.png',
+    'Team Liquid':       'liquid.png',
+    'M80':               'm80.png',
+    'Lynn Vision':       'lynnvision.png',
+    'MIBR':              'mibr.png',
+    'THUNDERdOWNUNDER':  'thunderdownunder.png',
+    'SINNERS':           'sinners.png',
+    'FlyQuest':          'flyquest.png'
+};
+
 function lerUsuarios() {
     return JSON.parse(localStorage.getItem(CHAVE)) || [];
 }
@@ -36,8 +55,16 @@ function criarItemLista(usuario) {
 
     if (usuario.time) {
         var timeEl = document.createElement('span');
-        timeEl.className   = 'usuario-time';
-        timeEl.textContent = usuario.time;
+        timeEl.className = 'usuario-time';
+        var logoFile = LOGOS[usuario.time];
+        if (logoFile) {
+            var logoImg = document.createElement('img');
+            logoImg.src       = 'assets/img/' + logoFile;
+            logoImg.alt       = 'Logo do ' + usuario.time;
+            logoImg.className = 'logo-mini';
+            timeEl.appendChild(logoImg);
+        }
+        timeEl.appendChild(document.createTextNode(usuario.time));
         info.appendChild(timeEl);
     }
 
