@@ -173,11 +173,91 @@ function limparFormulario() {
     document.getElementById('form-admin').reset();
 }
 
+function carregarDadosExemplo() {
+    if (lerUsuarios().length > 0 &&
+        !confirm('Isso vai substituir os dados atuais por usuários de exemplo. Continuar?')) {
+        return;
+    }
+
+    var TIMES = Object.keys(LOGOS);
+    var EXEMPLOS = [
+        { nome: 'Ana Beatriz Souza',     nick: 'anasz',       time: 'MIBR' },
+        { nome: 'Bruno Carvalho',        nick: 'b_carva',     time: 'Team Liquid' },
+        { nome: 'Carla Mendes',          nick: 'kmends',      time: 'HEROIC' },
+        { nome: 'Diego Ribeiro',         nick: 'dr1bz',       time: 'FlyQuest' },
+        { nome: 'Eduarda Lima',          nick: 'duudz',       time: 'NRG' },
+        { nome: 'Felipe Andrade',        nick: 'fefe_csgo',   time: 'BIG' },
+        { nome: 'Gustavo Pereira',       nick: 'gustp',       time: 'GamerLegion' },
+        { nome: 'Helena Martins',        nick: 'helmart',     time: 'MIBR' },
+        { nome: 'Igor Almeida',          nick: 'iggynh',      time: 'Sharks' },
+        { nome: 'Julia Castro',          nick: 'jucastro',    time: 'BetBoom' },
+        { nome: 'Kauan Felipe',          nick: 'kauanzera',   time: 'MIBR' },
+        { nome: 'Larissa Nogueira',      nick: 'larih',       time: 'Team Liquid' },
+        { nome: 'Matheus Oliveira',      nick: 'matt_ow',     time: 'TYLOO' },
+        { nome: 'Natalia Vieira',        nick: 'natpop',      time: 'Lynn Vision' },
+        { nome: 'Otavio Barreto',        nick: 'otavz',       time: 'M80' }
+    ];
+
+    var agora = Date.now();
+    var UM_DIA = 24 * 60 * 60 * 1000;
+    var diasAtras = [0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 4, 5, 6, 7, 10];
+
+    var usuarios = EXEMPLOS.map(function (ex, i) {
+        var ts = agora - (diasAtras[i] * UM_DIA) - (i * 60 * 1000);
+        return {
+            id:       ts,
+            nome:     ex.nome,
+            email:    ex.nick + '@exemplo.com',
+            senha:    'demo1234',
+            nick:     ex.nick,
+            time:     ex.time,
+            dataNasc: '2000-01-01',
+            data:     new Date(ts).toLocaleString('pt-BR')
+        };
+    });
+    salvarUsuarios(usuarios);
+
+    var PARTIDAS_BASE = [
+        { campo: 'p1', confronto: 'GamerLegion vs NRG',           opcoes: ['GamerLegion', 'NRG'] },
+        { campo: 'p2', confronto: 'B8 vs TYLOO',                  opcoes: ['B8', 'TYLOO'] },
+        { campo: 'p3', confronto: 'HEROIC vs Sharks',             opcoes: ['HEROIC', 'Sharks'] },
+        { campo: 'p4', confronto: 'BetBoom vs Gaimin Gladiators', opcoes: ['BetBoom', 'Gaimin Gladiators'] },
+        { campo: 'p5', confronto: 'BIG vs Team Liquid',           opcoes: ['BIG', 'Team Liquid'] },
+        { campo: 'p6', confronto: 'M80 vs Lynn Vision',           opcoes: ['M80', 'Lynn Vision'] },
+        { campo: 'p7', confronto: 'MIBR vs THUNDERdOWNUNDER',     opcoes: ['MIBR', 'THUNDERdOWNUNDER'] },
+        { campo: 'p8', confronto: 'SINNERS vs FlyQuest',          opcoes: ['SINNERS', 'FlyQuest'] }
+    ];
+    var COM_PICKEM = [0, 1, 2, 4, 5, 7, 10, 11, 13];
+    var previsoes = COM_PICKEM.map(function (idx) {
+        var u  = usuarios[idx];
+        var ts = u.id + 5 * 60 * 1000;
+        return {
+            email:     u.email,
+            campeao:   u.time,
+            partidas:  PARTIDAS_BASE.map(function (p, j) {
+                return {
+                    campo:     p.campo,
+                    confronto: p.confronto,
+                    escolha:   p.opcoes[(idx + j) % 2]
+                };
+            }),
+            dataSalvo: new Date(ts).toLocaleString('pt-BR')
+        };
+    });
+    localStorage.setItem(CHAVE_PREVISOES, JSON.stringify(previsoes));
+
+    renderizarLista();
+    atualizarKPIs();
+    alert('Dados de exemplo carregados: ' + usuarios.length + ' usuários, ' + previsoes.length + ' com Pick\'em salvo.');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('form-admin').addEventListener('submit', cadastrarUsuario);
     document.getElementById('btn-limpar').addEventListener('click', limparFormulario);
     document.getElementById('btn-limpar-tudo').addEventListener('click', limparTodos);
     document.getElementById('busca').addEventListener('input', pesquisar);
+    var btnSeed = document.getElementById('btn-seed');
+    if (btnSeed) btnSeed.addEventListener('click', carregarDadosExemplo);
     renderizarLista();
     atualizarKPIs();
 });
