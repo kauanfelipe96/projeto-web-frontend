@@ -642,6 +642,173 @@ footer small {
     font-size: 0.8rem;
 }
 
+/* ============ PICK'EM ============ */
+#pickem {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#aviso-login {
+    background: var(--cor-grafite);
+    border: 1px solid var(--cor-divider);
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#aviso-login a {
+    color: var(--cor-laranja);
+    text-decoration: none;
+}
+
+#aviso-login a:hover {
+    text-decoration: underline;
+}
+
+#form-pickem {
+    max-width: 720px;
+    margin: 0 auto;
+    background: transparent;
+    border: none;
+    padding: 0;
+    gap: 2rem;
+}
+
+#pick-campeao-area,
+#picks-abertura {
+    background: var(--cor-grafite);
+    border: 1px solid var(--cor-divider);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#pick-campeao-area > p,
+#picks-abertura > p {
+    color: var(--cor-cinza-medio);
+    font-size: 0.9rem;
+}
+
+#form-pickem button[type="submit"] {
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--cor-laranja);
+    color: var(--cor-navy);
+    border: none;
+    font-family: var(--fonte-titulo);
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+#form-pickem button[type="submit"]:hover {
+    filter: brightness(1.1);
+}
+
+.confronto {
+    border-bottom: 1px solid var(--cor-divider);
+    padding-bottom: 0.75rem;
+}
+
+.confronto:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.confronto h3 {
+    color: var(--cor-off-white);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+fieldset legend {
+    display: none;
+}
+
+fieldset label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--cor-off-white);
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.9rem;
+}
+
+fieldset input[type="radio"] {
+    accent-color: var(--cor-laranja);
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+#previsoes-salvas {
+    background: var(--cor-grafite);
+    border: 1px solid var(--cor-laranja);
+    padding: 1.25rem;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+#previsoes-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#previsoes-conteudo p strong {
+    color: var(--cor-laranja);
+    font-family: var(--fonte-titulo);
+}
+
+#previsoes-conteudo ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+#previsoes-conteudo ul li {
+    font-size: 0.88rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--cor-divider);
+    color: var(--cor-off-white);
+}
+
+#previsoes-conteudo ul li strong {
+    color: var(--cor-cinza-medio);
+}
+
+.previsao-data {
+    font-size: 0.78rem;
+    color: var(--cor-cinza-medio);
+    margin-top: 0.25rem;
+}
+
 /* ============ RESPONSIVO ============ */
 @media (max-width: 768px) {
     header {

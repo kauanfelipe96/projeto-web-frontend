@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pick'em da comunidade — faça suas previsões para o IEM Cologne Major 2026.">
+    <title>Pick'em — IEM Cologne Major 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html"><strong>IEM COLOGNE MAJOR 2026</strong></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="pickem.html">Pick'em</a></li>
+                <li><a href="cadastro.html">Cadastro</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="pickem">
+            <h1>Pick'em — IEM Cologne Major 2026</h1>
+            <p>Faça seus palpites e mostre que você conhece o cenário competitivo de CS2.</p>
+
+            <section id="aviso-login">
+                <p>Você precisa estar <a href="login.html">logado</a> para participar do Pick'em.</p>
+                <p>Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a>.</p>
+            </section>
+
+            <section id="form-pickem-area" hidden>
+                <form id="form-pickem">
+
+                    <section id="pick-campeao-area">
+                        <h2>Campeão do Major</h2>
+                        <p>Qual time vai erguer o troféu em Colônia?</p>
+                        <label for="pick-campeao">
+                            Time campeão
+                            <select id="pick-campeao" name="campeao" required>
+                                <option value="">Selecione um time</option>
+                                <optgroup label="Favoritos">
+                                    <option value="Team Vitality">Team Vitality</option>
+                                    <option value="NAVI">NAVI</option>
+                                    <option value="FaZe Clan">FaZe Clan</option>
+                                    <option value="G2 Esports">G2 Esports</option>
+                                    <option value="Team Spirit">Team Spirit</option>
+                                    <option value="The MongolZ">The MongolZ</option>
+                                </optgroup>
+                                <optgroup label="Brasil">
+                                    <option value="MIBR">MIBR</option>
+                                    <option value="FURIA">FURIA</option>
+                                </optgroup>
+                                <optgroup label="Demais times">
+                                    <option value="Team Liquid">Team Liquid</option>
+                                    <option value="HEROIC">HEROIC</option>
+                                    <option value="GamerLegion">GamerLegion</option>
+                                    <option value="NRG">NRG</option>
+                                    <option value="BIG">BIG</option>
+                                    <option value="BetBoom">BetBoom</option>
+                                    <option value="Gaimin Gladiators">Gaimin Gladiators</option>
+                                    <option value="M80">M80</option>
+                                    <option value="SINNERS">SINNERS</option>
+                                    <option value="FlyQuest">FlyQuest</option>
+                                    <option value="B8">B8</option>
+                                    <option value="Lynn Vision">Lynn Vision</option>
+                                    <option value="TYLOO">TYLOO</option>
+                                    <option value="Sharks">Sharks</option>
+                                    <option value="THUNDERdOWNUNDER">THUNDERdOWNUNDER</option>
+                                    <option value="paiN Gaming">paiN Gaming</option>
+                                    <option value="Complexity">Complexity</option>
+                                    <option value="9z Team">9z Team</option>
+                                </optgroup>
+                            </select>
+                        </label>
+                    </section>
+
+                    <section id="picks-abertura">
+                        <h2>Partidas de abertura — 6 de junho de 2026</h2>
+                        <p>Escolha o vencedor de cada confronto do primeiro dia.</p>
+
+                        <article class="confronto">
+                            <h3>GamerLegion vs NRG</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p1" value="GamerLegion" required> GamerLegion</label>
+                                <label><input type="radio" name="p1" value="NRG"> NRG</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>B8 vs TYLOO</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p2" value="B8" required> B8</label>
+                                <label><input type="radio" name="p2" value="TYLOO"> TYLOO</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>HEROIC vs Sharks</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p3" value="HEROIC" required> HEROIC</label>
+                                <label><input type="radio" name="p3" value="Sharks"> Sharks</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>BetBoom vs Gaimin Gladiators</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p4" value="BetBoom" required> BetBoom</label>
+                                <label><input type="radio" name="p4" value="Gaimin Gladiators"> Gaimin Gladiators</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>BIG vs Team Liquid</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p5" value="BIG" required> BIG</label>
+                                <label><input type="radio" name="p5" value="Team Liquid"> Team Liquid</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>M80 vs Lynn Vision</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p6" value="M80" required> M80</label>
+                                <label><input type="radio" name="p6" value="Lynn Vision"> Lynn Vision</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>MIBR vs THUNDERdOWNUNDER</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p7" value="MIBR" required> MIBR</label>
+                                <label><input type="radio" name="p7" value="THUNDERdOWNUNDER"> THUNDERdOWNUNDER</label>
+                            </fieldset>
+                        </article>
+
+                        <article class="confronto">
+                            <h3>SINNERS vs FlyQuest</h3>
+                            <fieldset>
+                                <legend>Vencedor</legend>
+                                <label><input type="radio" name="p8" value="SINNERS" required> SINNERS</label>
+                                <label><input type="radio" name="p8" value="FlyQuest"> FlyQuest</label>
+                            </fieldset>
+                        </article>
+                    </section>
+
+                    <button type="submit">Salvar Pick'em</button>
+                </form>
+            </section>
+
+            <section id="previsoes-salvas" hidden>
+                <h2>Suas previsões salvas</h2>
+                <div id="previsoes-conteudo"></div>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="https://www.linkedin.com/in/kauan-felipe-fullstack/" target="_blank" rel="noopener">Currículo (LinkedIn)</a></p>
+        <p><a href="https://github.com/kauanfelipe96/projeto-web-frontend" target="_blank" rel="noopener">Repositório no GitHub</a></p>
+        <p><small>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA — Projeto acadêmico, sem vínculo oficial com ESL ou Valve.</small></p>
+    </footer>
+
+    <script src="js/pickem.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
