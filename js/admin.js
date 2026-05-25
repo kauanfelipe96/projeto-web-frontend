@@ -179,23 +179,22 @@ function carregarDadosExemplo() {
         return;
     }
 
-    var TIMES = Object.keys(LOGOS);
     var EXEMPLOS = [
-        { nome: 'Ana Beatriz Souza',     nick: 'anasz',       time: 'MIBR' },
-        { nome: 'Bruno Carvalho',        nick: 'b_carva',     time: 'Team Liquid' },
-        { nome: 'Carla Mendes',          nick: 'kmends',      time: 'HEROIC' },
-        { nome: 'Diego Ribeiro',         nick: 'dr1bz',       time: 'FlyQuest' },
-        { nome: 'Eduarda Lima',          nick: 'duudz',       time: 'NRG' },
+        { nome: 'Ana Beatriz Souza',     nick: 'anasz',       time: 'FURIA' },
+        { nome: 'Bruno Carvalho',        nick: 'b_carva',     time: 'Team Vitality' },
+        { nome: 'Carla Mendes',          nick: 'kmends',      time: 'MIBR' },
+        { nome: 'Diego Ribeiro',         nick: 'dr1bz',       time: 'paiN Gaming' },
+        { nome: 'Eduarda Lima',          nick: 'duudz',       time: 'Natus Vincere' },
         { nome: 'Felipe Andrade',        nick: 'fefe_csgo',   time: 'BIG' },
-        { nome: 'Gustavo Pereira',       nick: 'gustp',       time: 'GamerLegion' },
-        { nome: 'Helena Martins',        nick: 'helmart',     time: 'MIBR' },
-        { nome: 'Igor Almeida',          nick: 'iggynh',      time: 'Sharks' },
-        { nome: 'Julia Castro',          nick: 'jucastro',    time: 'BetBoom' },
+        { nome: 'Gustavo Pereira',       nick: 'gustp',       time: 'The MongolZ' },
+        { nome: 'Helena Martins',        nick: 'helmart',     time: 'FURIA' },
+        { nome: 'Igor Almeida',          nick: 'iggynh',      time: 'G2 Esports' },
+        { nome: 'Julia Castro',          nick: 'jucastro',    time: 'Astralis' },
         { nome: 'Kauan Felipe',          nick: 'kauanzera',   time: 'MIBR' },
-        { nome: 'Larissa Nogueira',      nick: 'larih',       time: 'Team Liquid' },
-        { nome: 'Matheus Oliveira',      nick: 'matt_ow',     time: 'TYLOO' },
-        { nome: 'Natalia Vieira',        nick: 'natpop',      time: 'Lynn Vision' },
-        { nome: 'Otavio Barreto',        nick: 'otavz',       time: 'M80' }
+        { nome: 'Larissa Nogueira',      nick: 'larih',       time: 'Team Spirit' },
+        { nome: 'Matheus Oliveira',      nick: 'matt_ow',     time: 'Legacy' },
+        { nome: 'Natalia Vieira',        nick: 'natpop',      time: 'MOUZ' },
+        { nome: 'Otavio Barreto',        nick: 'otavz',       time: 'Team Falcons' }
     ];
 
     var agora = Date.now();

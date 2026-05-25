@@ -35,7 +35,7 @@ projeto-web-frontend/
 │   ├── pickem.js        # Lê sessão, salva e renderiza as previsões do usuário
 │   └── admin.js         # CRUD, busca, KPIs e botão de dados de exemplo
 ├── assets/
-│   ├── img/             # Lanxess Arena, Catedral de Colônia e logos dos 16 times
+│   ├── img/             # Lanxess Arena, Catedral de Colônia e logos dos 16 times do Contenders Stage
 │   └── icons/           # Ícones SVG (Heroicons — troféu, calendário, localização, etc.)
 └── README.md
 ```
@@ -47,7 +47,7 @@ projeto-web-frontend/
 | `index.html` | Overview do Major: hero com contagem regressiva, key facts (premiação, formato, sede), próximas partidas e cards dos 16 times confirmados |
 | `matches.html` | Calendário completo de partidas agrupado por dia, com filtros por stage e status, busca por time/mapa e linhas no estilo HLTV |
 | `main-event.html` | Distribuição do prize pool de US$ 1.250.000, chaveamento dos playoffs (Quartas → Final) e schedule oficial dia a dia |
-| `teams.html` | Times participantes organizados por tier (Legends, Challengers, Contenders) com filtros por região, roster, ranking e estatísticas de Swiss |
+| `teams.html` | Os **32 times participantes** organizados por tier (8 Legends, 8 Challengers, 16 Contenders) com roster, ranking e região — lineup oficial do Major segundo o HLTV |
 | `venue.html` | Guia da Lanxess Arena: capacidade, histórico, transporte público de Colônia, onde ficar/comer e dicas para o evento |
 | `pickem.html` | Pick'em da comunidade: seleção das 8 partidas de abertura + escolha do campeão, salvos no LocalStorage por sessão de usuário |
 | `cadastro.html` | Formulário de inscrição com 6 campos (nome, e-mail, senha, nick Steam, time favorito e data de nascimento); redireciona para `login.html` |
