@@ -44,11 +44,127 @@ function montarGrid(opts) {
   });
 }
 
+/* ===== STAGE 2 — slots + chip pool ===== */
+var stage2Picks  = { '30': [null, null], '03': [null, null] };
+var stage2Active = null;
+
+function stage2UsedTeams() {
+  return stage2Picks['30'].concat(stage2Picks['03']).filter(Boolean);
+}
+
+function renderStage2Slots() {
+  document.querySelectorAll('.pick-slot').forEach(function (slot) {
+    var cat  = slot.dataset.cat;
+    var idx  = parseInt(slot.dataset.slot, 10);
+    var team = stage2Picks[cat][idx];
+    slot.classList.toggle('filled', !!team);
+    slot.classList.toggle('active', !team && slot === stage2Active);
+    while (slot.firstChild) slot.removeChild(slot.firstChild);
+    if (team) {
+      var logo = document.createElement('span');
+      logo.className = 'slot-team-logo';
+      logo.textContent = abrev(team);
+      var name = document.createElement('span');
+      name.className = 'slot-team-name';
+      name.textContent = team;
+      var rem = document.createElement('span');
+      rem.className = 'slot-remove';
+      rem.textContent = '×';
+      slot.appendChild(logo);
+      slot.appendChild(name);
+      slot.appendChild(rem);
+    } else {
+      var ico = document.createElement('span');
+      ico.className = 'slot-empty-icon';
+      ico.textContent = '+';
+      var txt = document.createElement('span');
+      txt.textContent = 'Escolher time';
+      slot.appendChild(ico);
+      slot.appendChild(txt);
+    }
+  });
+}
+
+function renderStage2Chips() {
+  var grid = document.getElementById('stage2-chips');
+  if (!grid) return;
+  var usados = stage2UsedTeams();
+  while (grid.firstChild) grid.removeChild(grid.firstChild);
+  TODOS_TIMES.forEach(function (time) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip' + (usados.indexOf(time) !== -1 ? ' used' : '');
+    btn.dataset.team = time;
+    btn.innerHTML =
+      '<span class="chip-logo">' + abrev(time) + '</span>' +
+      '<span class="chip-name">' + time + '</span>';
+    btn.addEventListener('click', function () { onChipClick(time); });
+    grid.appendChild(btn);
+  });
+}
+
+function atualizarBadgeStage2() {
+  var n = stage2UsedTeams().length;
+  var badge = document.getElementById('badge-stage2');
+  if (badge) badge.textContent = n + '/4';
+  atualizarStatus('stage2', n, 4);
+}
+
+function renderStage2() {
+  renderStage2Slots();
+  renderStage2Chips();
+  atualizarBadgeStage2();
+}
+
+function onSlotClick(e) {
+  var slot = e.currentTarget;
+  var cat  = slot.dataset.cat;
+  var idx  = parseInt(slot.dataset.slot, 10);
+  if (stage2Picks[cat][idx]) {
+    stage2Picks[cat][idx] = null;
+    stage2Active = null;
+  } else {
+    stage2Active = (stage2Active === slot) ? null : slot;
+  }
+  renderStage2();
+}
+
+function onChipClick(team) {
+  if (stage2UsedTeams().indexOf(team) !== -1) return;
+  var cat, idx;
+  if (stage2Active) {
+    cat = stage2Active.dataset.cat;
+    idx = parseInt(stage2Active.dataset.slot, 10);
+  } else {
+    /* preenche o primeiro slot vazio: 3-0 primeiro, depois 0-3 */
+    if      (stage2Picks['30'][0] === null) { cat = '30'; idx = 0; }
+    else if (stage2Picks['30'][1] === null) { cat = '30'; idx = 1; }
+    else if (stage2Picks['03'][0] === null) { cat = '03'; idx = 0; }
+    else if (stage2Picks['03'][1] === null) { cat = '03'; idx = 1; }
+    else return;
+  }
+  stage2Picks[cat][idx] = team;
+  stage2Active = null;
+  renderStage2();
+}
+
+function ligarStage2() {
+  document.querySelectorAll('.pick-slot').forEach(function (slot) {
+    slot.addEventListener('click', onSlotClick);
+  });
+  renderStage2();
+}
+
+function resetarStage2() {
+  stage2Picks  = { '30': [null, null], '03': [null, null] };
+  stage2Active = null;
+  renderStage2();
+}
+
 function montarTodosGrids() {
-  montarGrid({ gridId: 'stage2-30-grid', name: 'stage2_30', idPrefix: 's2_30_', tipo: 'checkbox', times: TODOS_TIMES });
-  montarGrid({ gridId: 'stage2-03-grid', name: 'stage2_03', idPrefix: 's2_03_', tipo: 'checkbox', times: TODOS_TIMES });
-  montarGrid({ gridId: 'top8-grid',      name: 'top8',      idPrefix: 'top8_',  tipo: 'checkbox', times: TIMES_TOP8 });
-  montarGrid({ gridId: 'playoffs-grid',  name: 'campeao',   idPrefix: 'champ_', tipo: 'radio',    times: TODOS_TIMES });
+  ligarStage2();
+  montarGrid({ gridId: 'top8-grid',     name: 'top8',    idPrefix: 'top8_',  tipo: 'checkbox', times: TIMES_TOP8 });
+  montarGrid({ gridId: 'playoffs-grid', name: 'campeao', idPrefix: 'champ_', tipo: 'radio',    times: TODOS_TIMES });
 }
 
 /* avatar — pega 2 letras do nick (sem números/underscore) */
@@ -122,10 +238,6 @@ function contarChecked(nome) {
   return document.querySelectorAll('input[name="' + nome + '"]:checked').length;
 }
 
-function contarPicksStage2() {
-  return contarChecked('stage2_30') + contarChecked('stage2_03');
-}
-
 function ligarLimite(name, max, rotuloErro) {
   document.querySelectorAll('input[name="' + name + '"]').forEach(function (cb) {
     cb.addEventListener('change', function () {
@@ -133,9 +245,7 @@ function ligarLimite(name, max, rotuloErro) {
         cb.checked = false;
         alert(rotuloErro);
       }
-      if (name === 'stage2_30' || name === 'stage2_03') {
-        atualizarStatus('stage2', contarPicksStage2(), 4);
-      } else if (name === 'top8') {
+      if (name === 'top8') {
         atualizarStatus('stage3', contarChecked('top8'), 8);
       }
     });
@@ -143,9 +253,7 @@ function ligarLimite(name, max, rotuloErro) {
 }
 
 function ligarContadores() {
-  ligarLimite('stage2_30', 2, 'Você só pode escolher 2 times para o pick de 3 — 0.');
-  ligarLimite('stage2_03', 2, 'Você só pode escolher 2 times para o pick de 0 — 3.');
-  ligarLimite('top8',      8, 'Você só pode escolher 8 times no Top 8.');
+  ligarLimite('top8', 8, 'Você só pode escolher 8 times no Top 8.');
   document.querySelectorAll('input[name="campeao"]').forEach(function (rd) {
     rd.addEventListener('change', function () {
       atualizarStatus('playoffs', rd.checked ? 1 : 0, 1);
@@ -163,14 +271,22 @@ function marcarChecked(nome, valores) {
 
 function preencherPicks(picks) {
   if (!picks) return;
-  marcarChecked('stage2_30', picks.stage2_30);
-  marcarChecked('stage2_03', picks.stage2_03);
-  marcarChecked('top8',      picks.top8);
+  /* Stage 2 — restaura os slots */
+  if (picks.stage2_30 && picks.stage2_30.length) {
+    stage2Picks['30'][0] = picks.stage2_30[0] || null;
+    stage2Picks['30'][1] = picks.stage2_30[1] || null;
+  }
+  if (picks.stage2_03 && picks.stage2_03.length) {
+    stage2Picks['03'][0] = picks.stage2_03[0] || null;
+    stage2Picks['03'][1] = picks.stage2_03[1] || null;
+  }
+  renderStage2();
+
+  marcarChecked('top8', picks.top8);
   if (picks.campeao) {
     var el = document.querySelector('input[name="campeao"][value="' + picks.campeao + '"]');
     if (el) el.checked = true;
   }
-  atualizarStatus('stage2',   contarPicksStage2(), 4);
   atualizarStatus('stage3',   contarChecked('top8'), 8);
   atualizarStatus('playoffs', picks.campeao ? 1 : 0, 1);
 }
@@ -186,8 +302,8 @@ function coletarValores(name) {
 function coletarPicks() {
   var campRadio = document.querySelector('input[name="campeao"]:checked');
   return {
-    stage2_30: coletarValores('stage2_30'),
-    stage2_03: coletarValores('stage2_03'),
+    stage2_30: stage2Picks['30'].filter(Boolean),
+    stage2_03: stage2Picks['03'].filter(Boolean),
     top8:      coletarValores('top8'),
     campeao:   campRadio ? campRadio.value : '',
     dataSalvo: new Date().toLocaleString('pt-BR')
@@ -222,11 +338,10 @@ function salvarPicks(e) {
 
 function resetar() {
   if (!confirm('Resetar todos os picks de Stage 2, Top 8 e Campeão?')) return;
+  resetarStage2();
   document.querySelectorAll(
-    'input[name="stage2_30"]:checked, input[name="stage2_03"]:checked, ' +
     'input[name="top8"]:checked, input[name="campeao"]:checked'
   ).forEach(function (el) { el.checked = false; });
-  atualizarStatus('stage2', 0, 4);
   atualizarStatus('stage3', 0, 8);
   atualizarStatus('playoffs', 0, 1);
 }

@@ -154,6 +154,99 @@
     }
     @media (max-width: 480px) { .pick-selects-row { grid-template-columns: 1fr; } }
 
+    /* Stage 2 — slots + pool */
+    .slot-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .pick-slot {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px;
+      background: transparent;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--ink-mute);
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      text-align: left; width: 100%;
+      min-height: 56px;
+      transition: border-color .15s, background .15s, color .15s;
+    }
+    .pick-slot:hover { border-color: var(--accent); color: var(--ink); }
+    .pick-slot.active {
+      border-color: var(--accent); border-style: solid;
+      background: rgba(255,224,59,0.08);
+      color: var(--accent);
+    }
+    .pick-slot.filled {
+      border-style: solid;
+      border-color: var(--line-strong);
+      background: var(--bg-2);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .pick-slot .slot-empty-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      display: grid; place-items: center;
+      font-size: 16px; font-family: 'Inter', sans-serif; font-weight: 400;
+      flex-shrink: 0;
+    }
+    .pick-slot .slot-team-logo {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line-strong);
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 10px; letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    .pick-slot .slot-team-name {
+      flex: 1;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .pick-slot .slot-remove {
+      color: var(--ink-mute); font-size: 16px;
+      width: 18px; height: 18px;
+      display: grid; place-items: center;
+    }
+
+    .chip-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    }
+    @media (max-width: 768px) { .chip-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 480px) { .chip-grid { grid-template-columns: repeat(2, 1fr); } }
+    .chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink);
+      transition: border-color .15s, background .15s, opacity .15s;
+    }
+    .chip:hover { border-color: var(--accent); }
+    .chip.used {
+      opacity: 0.3; cursor: not-allowed;
+      pointer-events: none;
+    }
+    .chip .chip-logo {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 9px;
+      flex-shrink: 0;
+    }
+    .chip .chip-name {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
     /* Top-8 grid (Stage 3 checkboxes) */
     .top8-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
@@ -373,20 +466,31 @@
               </div>
             </section>
 
-            <!-- Stage 2 — open -->
+            <!-- Stage 2 — open (slots + pool) -->
             <section class="pk-stage" data-stage="stage2">
               <div class="stage-head">
                 <h2>Stage 2 · Swiss</h2>
-                <span class="stage-deadline">Fecha em 12h</span>
-                <span class="stage-status" id="status-stage2">0 / 4 picks</span>
+                <span class="stage-badge-pts" style="color:var(--accent-2);background:rgba(76,201,255,0.12);border-color:rgba(76,201,255,0.3);">Open · <span id="badge-stage2">0/4</span></span>
+                <span class="stage-status">Fecha 06 Jun · 14:00 CET</span>
+              </div>
+
+              <div class="pick-group">
+                <span class="pick-label">3 — 0 (2 picks <span class="pts">· 8 pts cada</span>)</span>
+                <div class="slot-row">
+                  <button type="button" class="pick-slot" data-cat="30" data-slot="0"></button>
+                  <button type="button" class="pick-slot" data-cat="30" data-slot="1"></button>
+                </div>
               </div>
               <div class="pick-group">
-                <span class="pick-label">3 — 0 (qualificados rápidos) · escolha 2 <span class="pts">· 8 pts cada</span></span>
-                <div class="top8-grid" id="stage2-30-grid"></div>
+                <span class="pick-label">0 — 3 (2 picks <span class="pts">· 4 pts cada</span>)</span>
+                <div class="slot-row">
+                  <button type="button" class="pick-slot" data-cat="03" data-slot="0"></button>
+                  <button type="button" class="pick-slot" data-cat="03" data-slot="1"></button>
+                </div>
               </div>
               <div class="pick-group">
-                <span class="pick-label">0 — 3 (eliminados rápidos) · escolha 2 <span class="pts">· 4 pts cada</span></span>
-                <div class="top8-grid" id="stage2-03-grid"></div>
+                <span class="pick-label">Times disponíveis · clique para escolher</span>
+                <div class="chip-grid" id="stage2-chips"></div>
               </div>
             </section>
 
@@ -463,8 +567,8 @@
   </main>
 
   <div id="site-foot"></div>
-  <script src="js/site.js?v=2"></script>
-  <script src="js/pickem.js?v=2"></script>
-  <script src="js/auth.js?v=2"></script>
+  <script src="js/site.js?v=3"></script>
+  <script src="js/pickem.js?v=3"></script>
+  <script src="js/auth.js?v=3"></script>
 </body>
 </html>
