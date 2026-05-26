@@ -26,22 +26,29 @@ function salvarPrevisoes(prev) { localStorage.setItem(CHAVE_PREVISOES, JSON.stri
 
 function abrev(time) { return ABREV[time] || time.slice(0,3).toUpperCase(); }
 
-function montarGrid(opts) {
-  /* opts: { gridId, name, value? prefix, tipo: 'checkbox'|'radio', times } */
-  var grid = document.getElementById(opts.gridId);
-  if (!grid) return;
-  opts.times.forEach(function (time, i) {
-    var id = opts.idPrefix + i;
-    var cell = document.createElement('div');
-    cell.className = 'top8-cell';
-    cell.innerHTML =
-      '<input type="' + opts.tipo + '" id="' + id + '" name="' + opts.name + '" value="' + time + '">' +
-      '<label for="' + id + '">' +
-        '<span class="logo">' + abrev(time) + '</span>' +
-        '<span class="name">' + time + '</span>' +
-      '</label>';
-    grid.appendChild(cell);
-  });
+var LOGO_FILES = {
+  'Team Vitality':'vitality.png',  'Natus Vincere':'navi.png',
+  'The MongolZ':'mongolz.png',     'Team Falcons':'falcons.png',
+  'MOUZ':'mouz.png',               'FURIA':'furia.png',
+  'PARIVISION':'parivision.png',   'Aurora Gaming':'aurora.png',
+  'Team Spirit':'spirit.png',      'G2 Esports':'g2.png',
+  'Astralis':'astralis.png',       'paiN Gaming':'pain.png',
+  'Monte':'monte.png',             'FUT Esports':'fut.png',
+  '9z Team':'9z.png',              'Legacy':'legacy.png',
+  'GamerLegion':'gamerlegion.png', 'Team Liquid':'liquid.png',
+  'HEROIC':'heroic.png',           'BIG':'big.png',
+  'MIBR':'mibr.png',               'NRG':'nrg.png',
+  'BetBoom':'betboom.png',         'Gaimin Gladiators':'gaimingladiators.png',
+  'B8':'b8.png',                   'M80':'m80.png',
+  'SINNERS':'sinners.png',         'FlyQuest':'flyquest.png',
+  'TYLOO':'tyloo.png',             'Lynn Vision':'lynnvision.png',
+  'Sharks':'sharks.png',           'THUNDERdOWNUNDER':'thunderdownunder.png'
+};
+
+function logoHTML(team) {
+  var file = LOGO_FILES[team];
+  if (file) return '<img src="assets/img/' + file + '" alt="' + team + '">';
+  return abrev(team);
 }
 
 /* ===== STAGE 2 — slots + chip pool ===== */
@@ -63,7 +70,7 @@ function renderStage2Slots() {
     if (team) {
       var logo = document.createElement('span');
       logo.className = 'slot-team-logo';
-      logo.textContent = abrev(team);
+      logo.innerHTML = logoHTML(team);
       var name = document.createElement('span');
       name.className = 'slot-team-name';
       name.textContent = team;
@@ -96,7 +103,7 @@ function renderStage2Chips() {
     btn.className = 'chip' + (usados.indexOf(time) !== -1 ? ' used' : '');
     btn.dataset.team = time;
     btn.innerHTML =
-      '<span class="chip-logo">' + abrev(time) + '</span>' +
+      '<span class="chip-logo">' + logoHTML(time) + '</span>' +
       '<span class="chip-name">' + time + '</span>';
     btn.addEventListener('click', function () { onChipClick(time); });
     grid.appendChild(btn);

@@ -2,6 +2,25 @@ const CHAVE = 'pickem_usuarios';
 const CHAVE_PREVISOES = 'pickem_previsoes';
 
 const LOGOS = {
+    /* Legends */
+    'Team Vitality':     'vitality.png',
+    'Natus Vincere':     'navi.png',
+    'The MongolZ':       'mongolz.png',
+    'Team Falcons':      'falcons.png',
+    'MOUZ':              'mouz.png',
+    'FURIA':             'furia.png',
+    'PARIVISION':        'parivision.png',
+    'Aurora Gaming':     'aurora.png',
+    /* Challengers */
+    'Team Spirit':       'spirit.png',
+    'G2 Esports':        'g2.png',
+    'Astralis':          'astralis.png',
+    'paiN Gaming':       'pain.png',
+    'Monte':             'monte.png',
+    'FUT Esports':       'fut.png',
+    '9z Team':           '9z.png',
+    'Legacy':            'legacy.png',
+    /* Contenders */
     'GamerLegion':       'gamerlegion.png',
     'NRG':               'nrg.png',
     'B8':                'b8.png',
