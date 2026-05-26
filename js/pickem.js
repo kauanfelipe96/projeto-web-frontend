@@ -26,49 +26,29 @@ function salvarPrevisoes(prev) { localStorage.setItem(CHAVE_PREVISOES, JSON.stri
 
 function abrev(time) { return ABREV[time] || time.slice(0,3).toUpperCase(); }
 
-function montarOptgroup(label, times) {
-  var og = document.createElement('optgroup');
-  og.label = label;
-  times.forEach(function (t) {
-    var opt = document.createElement('option');
-    opt.value = t; opt.textContent = t;
-    og.appendChild(opt);
-  });
-  return og;
-}
-
-function popularSelects() {
-  var selectsStage2  = document.querySelectorAll('select[data-stage="stage2"]');
-  var selectCampeao  = document.getElementById('pick-campeao');
-
-  selectsStage2.forEach(function (sel) {
-    sel.appendChild(montarOptgroup('Legends Stage',    LEGENDS));
-    sel.appendChild(montarOptgroup('Challengers Stage', CHALLENGERS));
-    sel.appendChild(montarOptgroup('Contenders Stage',  CONTENDERS));
-  });
-
-  if (selectCampeao) {
-    selectCampeao.appendChild(montarOptgroup('Legends Stage',    LEGENDS));
-    selectCampeao.appendChild(montarOptgroup('Challengers Stage', CHALLENGERS));
-    selectCampeao.appendChild(montarOptgroup('Contenders Stage',  CONTENDERS));
-  }
-}
-
-function montarTop8Grid() {
-  var grid = document.getElementById('top8-grid');
+function montarGrid(opts) {
+  /* opts: { gridId, name, value? prefix, tipo: 'checkbox'|'radio', times } */
+  var grid = document.getElementById(opts.gridId);
   if (!grid) return;
-  TIMES_TOP8.forEach(function (time, i) {
-    var id = 'top8-' + i;
+  opts.times.forEach(function (time, i) {
+    var id = opts.idPrefix + i;
     var cell = document.createElement('div');
     cell.className = 'top8-cell';
     cell.innerHTML =
-      '<input type="checkbox" id="' + id + '" name="top8" value="' + time + '">' +
+      '<input type="' + opts.tipo + '" id="' + id + '" name="' + opts.name + '" value="' + time + '">' +
       '<label for="' + id + '">' +
         '<span class="logo">' + abrev(time) + '</span>' +
         '<span class="name">' + time + '</span>' +
       '</label>';
     grid.appendChild(cell);
   });
+}
+
+function montarTodosGrids() {
+  montarGrid({ gridId: 'stage2-30-grid', name: 'stage2_30', idPrefix: 's2_30_', tipo: 'checkbox', times: TODOS_TIMES });
+  montarGrid({ gridId: 'stage2-03-grid', name: 'stage2_03', idPrefix: 's2_03_', tipo: 'checkbox', times: TODOS_TIMES });
+  montarGrid({ gridId: 'top8-grid',      name: 'top8',      idPrefix: 'top8_',  tipo: 'checkbox', times: TIMES_TOP8 });
+  montarGrid({ gridId: 'playoffs-grid',  name: 'campeao',   idPrefix: 'champ_', tipo: 'radio',    times: TODOS_TIMES });
 }
 
 /* avatar — pega 2 letras do nick (sem números/underscore) */
@@ -138,76 +118,80 @@ function atualizarStatus(stage, atual, total) {
   }
 }
 
-function contarPicksStage2() {
-  var selects = document.querySelectorAll('select[data-stage="stage2"]');
-  var c = 0;
-  selects.forEach(function (s) { if (s.value) c++; });
-  return c;
+function contarChecked(nome) {
+  return document.querySelectorAll('input[name="' + nome + '"]:checked').length;
 }
 
-function contarTop8() {
-  return document.querySelectorAll('input[name="top8"]:checked').length;
+function contarPicksStage2() {
+  return contarChecked('stage2_30') + contarChecked('stage2_03');
+}
+
+function ligarLimite(name, max, rotuloErro) {
+  document.querySelectorAll('input[name="' + name + '"]').forEach(function (cb) {
+    cb.addEventListener('change', function () {
+      if (cb.checked && contarChecked(name) > max) {
+        cb.checked = false;
+        alert(rotuloErro);
+      }
+      if (name === 'stage2_30' || name === 'stage2_03') {
+        atualizarStatus('stage2', contarPicksStage2(), 4);
+      } else if (name === 'top8') {
+        atualizarStatus('stage3', contarChecked('top8'), 8);
+      }
+    });
+  });
 }
 
 function ligarContadores() {
-  document.querySelectorAll('select[data-stage="stage2"]').forEach(function (s) {
-    s.addEventListener('change', function () {
-      atualizarStatus('stage2', contarPicksStage2(), 4);
+  ligarLimite('stage2_30', 2, 'Você só pode escolher 2 times para o pick de 3 — 0.');
+  ligarLimite('stage2_03', 2, 'Você só pode escolher 2 times para o pick de 0 — 3.');
+  ligarLimite('top8',      8, 'Você só pode escolher 8 times no Top 8.');
+  document.querySelectorAll('input[name="campeao"]').forEach(function (rd) {
+    rd.addEventListener('change', function () {
+      atualizarStatus('playoffs', rd.checked ? 1 : 0, 1);
     });
   });
-  document.querySelectorAll('input[name="top8"]').forEach(function (cb) {
-    cb.addEventListener('change', function () {
-      var n = contarTop8();
-      if (n > 8 && cb.checked) {
-        cb.checked = false;
-        alert('Você só pode escolher 8 times no Top 8.');
-        return;
-      }
-      atualizarStatus('stage3', contarTop8(), 8);
-    });
+}
+
+function marcarChecked(nome, valores) {
+  if (!valores || !valores.length) return;
+  valores.forEach(function (v) {
+    var el = document.querySelector('input[name="' + nome + '"][value="' + v + '"]');
+    if (el) el.checked = true;
   });
-  var campeao = document.getElementById('pick-campeao');
-  if (campeao) {
-    campeao.addEventListener('change', function () {
-      atualizarStatus('playoffs', campeao.value ? 1 : 0, 1);
-    });
-  }
 }
 
 function preencherPicks(picks) {
   if (!picks) return;
-  if (picks.stage2) {
-    Object.keys(picks.stage2).forEach(function (k) {
-      var sel = document.querySelector('select[name="' + k + '"]');
-      if (sel) sel.value = picks.stage2[k];
-    });
-  }
-  if (picks.top8 && picks.top8.length) {
-    picks.top8.forEach(function (time) {
-      var cb = document.querySelector('input[name="top8"][value="' + time + '"]');
-      if (cb) cb.checked = true;
-    });
-  }
+  marcarChecked('stage2_30', picks.stage2_30);
+  marcarChecked('stage2_03', picks.stage2_03);
+  marcarChecked('top8',      picks.top8);
   if (picks.campeao) {
-    var c = document.getElementById('pick-campeao');
-    if (c) c.value = picks.campeao;
+    var el = document.querySelector('input[name="campeao"][value="' + picks.campeao + '"]');
+    if (el) el.checked = true;
   }
   atualizarStatus('stage2',   contarPicksStage2(), 4);
-  atualizarStatus('stage3',   contarTop8(),        8);
+  atualizarStatus('stage3',   contarChecked('top8'), 8);
   atualizarStatus('playoffs', picks.campeao ? 1 : 0, 1);
 }
 
+function coletarValores(name) {
+  var arr = [];
+  document.querySelectorAll('input[name="' + name + '"]:checked').forEach(function (el) {
+    arr.push(el.value);
+  });
+  return arr;
+}
+
 function coletarPicks() {
-  var stage2 = {};
-  document.querySelectorAll('select[data-stage="stage2"]').forEach(function (s) {
-    if (s.value) stage2[s.name] = s.value;
-  });
-  var top8 = [];
-  document.querySelectorAll('input[name="top8"]:checked').forEach(function (cb) {
-    top8.push(cb.value);
-  });
-  var campeao = (document.getElementById('pick-campeao') || {}).value || '';
-  return { stage2: stage2, top8: top8, campeao: campeao, dataSalvo: new Date().toLocaleString('pt-BR') };
+  var campRadio = document.querySelector('input[name="campeao"]:checked');
+  return {
+    stage2_30: coletarValores('stage2_30'),
+    stage2_03: coletarValores('stage2_03'),
+    top8:      coletarValores('top8'),
+    campeao:   campRadio ? campRadio.value : '',
+    dataSalvo: new Date().toLocaleString('pt-BR')
+  };
 }
 
 function salvarPicks(e) {
@@ -215,7 +199,7 @@ function salvarPicks(e) {
   var usuario = JSON.parse(sessionStorage.getItem(CHAVE_SESSAO) || 'null');
   if (!usuario) return;
 
-  var top8Count = contarTop8();
+  var top8Count = contarChecked('top8');
   if (top8Count > 0 && top8Count !== 8) {
     alert('Para o Top 8 você precisa escolher exatamente 8 times (atualmente ' + top8Count + ').');
     return;
@@ -238,10 +222,10 @@ function salvarPicks(e) {
 
 function resetar() {
   if (!confirm('Resetar todos os picks de Stage 2, Top 8 e Campeão?')) return;
-  document.querySelectorAll('select[data-stage="stage2"], #pick-campeao').forEach(function (s) {
-    s.value = '';
-  });
-  document.querySelectorAll('input[name="top8"]:checked').forEach(function (cb) { cb.checked = false; });
+  document.querySelectorAll(
+    'input[name="stage2_30"]:checked, input[name="stage2_03"]:checked, ' +
+    'input[name="top8"]:checked, input[name="campeao"]:checked'
+  ).forEach(function (el) { el.checked = false; });
   atualizarStatus('stage2', 0, 4);
   atualizarStatus('stage3', 0, 8);
   atualizarStatus('playoffs', 0, 1);
@@ -271,8 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var usuario = JSON.parse(sessao);
 
-  popularSelects();
-  montarTop8Grid();
+  montarTodosGrids();
   ligarContadores();
   ligarTabsLeaderboard();
 

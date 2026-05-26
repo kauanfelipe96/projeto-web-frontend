@@ -117,9 +117,13 @@ function atualizarKPIs() {
         }
     });
 
-    document.getElementById('kpi-total').textContent  = usuarios.length;
-    document.getElementById('kpi-pickem').textContent = totalPickem;
-    document.getElementById('kpi-hoje').textContent   = totalHoje;
+    var fmt = function (n) { return n.toLocaleString('pt-BR'); };
+    var setText = function (id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; };
+
+    setText('kpi-total',         fmt(usuarios.length));
+    setText('kpi-pickem',        fmt(totalPickem));
+    setText('kpi-total-delta',   '↑ ' + totalHoje + ' nas últimas 24h');
+    setText('sidebar-users-badge', fmt(usuarios.length));
 }
 
 function cadastrarUsuario(e) {
@@ -219,17 +223,15 @@ function carregarDadosExemplo() {
 
     /* previsões de pick'em — formato novo (stage2 + top8 + campeão) */
     var COM_PICKEM = [0, 1, 2, 4, 5, 7, 10, 11, 13];
+    var TEAMS_30 = [['Team Vitality','MOUZ'], ['Natus Vincere','FURIA'], ['The MongolZ','Team Falcons']];
+    var TEAMS_03 = [['THUNDERdOWNUNDER','M80'], ['Sharks','SINNERS'], ['Lynn Vision','TYLOO']];
     var previsoes = COM_PICKEM.map(function (idx) {
         var u  = usuarios[idx];
         var ts = u.id + 5 * 60 * 1000;
         return {
             email:     u.email,
-            stage2: {
-                s2_30_a: ['Team Vitality','Natus Vincere','The MongolZ'][idx % 3],
-                s2_30_b: ['MOUZ','FURIA','Team Falcons'][idx % 3],
-                s2_03_a: ['THUNDERdOWNUNDER','Sharks','Lynn Vision'][idx % 3],
-                s2_03_b: ['M80','SINNERS','TYLOO'][idx % 3]
-            },
+            stage2_30: TEAMS_30[idx % 3],
+            stage2_03: TEAMS_03[idx % 3],
             top8: ['Team Vitality','Natus Vincere','The MongolZ','Team Falcons','MOUZ','FURIA','Team Spirit','G2 Esports'],
             campeao: u.time,
             dataSalvo: new Date(ts).toLocaleString('pt-BR')

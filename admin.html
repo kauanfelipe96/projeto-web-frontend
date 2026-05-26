@@ -5,325 +5,533 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Painel administrativo do Pick'em da comunidade — IEM Cologne Major 2026.">
   <title>Admin — IEM Cologne Major 2026</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
+    /* ====== ADMIN PAGE ====== */
+    .admin-restrict-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid rgba(231, 76, 60, 0.5);
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--loss);
+      margin-bottom: 18px;
+    }
+    .admin-restrict-badge::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--loss);
+    }
+
+    /* Layout */
     .admin-layout {
       display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 24px;
-      padding: 40px 0 60px;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
+      padding: 32px 0 60px;
     }
     /* Sidebar */
     .admin-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: flex; flex-direction: column;
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      position: sticky; top: 16px;
+      align-self: start;
     }
-    .admin-sidebar-header {
+    .admin-sidebar-section {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
       color: var(--ink-mute);
-      padding: 0 12px;
-      margin-bottom: 4px;
+      padding: 12px 10px 6px;
     }
     .admin-nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px;
       border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 500;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase;
       color: var(--ink-dim);
       text-decoration: none;
-      cursor: default;
       transition: background .15s, color .15s;
     }
+    .admin-nav-item:hover { background: var(--bg-2); color: var(--ink); }
     .admin-nav-item.active {
-      background: rgba(255,224,59,.1);
+      background: rgba(255,224,59,0.08);
       color: var(--accent);
     }
-    .admin-nav-item:not(.active):hover {
-      background: var(--bg-1);
-      color: var(--ink);
+    .admin-nav-item .badge {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.06em;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: var(--ink-dim);
+    }
+    .admin-nav-item .ico {
+      width: 16px; height: 16px; flex-shrink: 0;
     }
 
-    /* Main content */
     .admin-main { min-width: 0; }
-    .admin-page-head {
-      margin-bottom: 28px;
-    }
-    .admin-page-head h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 4px;
-    }
-    .admin-page-head p { font-size: 14px; color: var(--ink-dim); }
 
-    /* KPI cards */
+    /* KPI row */
     .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      margin-bottom: 18px;
     }
     .kpi-card {
       background: var(--bg-1);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 20px 24px;
+      padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 4px;
     }
     .kpi-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
       color: var(--ink-mute);
-      margin-bottom: 8px;
     }
     .kpi-val {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 40px;
-      font-weight: 800;
-      color: var(--accent);
-      line-height: 1;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 36px; line-height: 1; color: var(--ink);
+      margin-top: 4px;
     }
-    .kpi-val.cyan { color: var(--accent-2); }
+    .kpi-val.orange { color: var(--warn); }
+    .kpi-delta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--win);
+      letter-spacing: 0.06em;
+      margin-top: 6px;
+    }
+    .kpi-delta.orange { color: var(--warn); }
+    .kpi-delta.muted  { color: var(--ink-mute); }
+    .kpi-spark {
+      display: flex; align-items: flex-end; gap: 4px;
+      height: 28px; margin-top: 10px;
+    }
+    .kpi-spark span {
+      flex: 1; background: var(--accent-2); border-radius: 2px;
+    }
+    .kpi-spark.orange span { background: var(--warn); }
+    .kpi-spark.gray   span { background: var(--ink-mute); opacity: 0.4; }
 
-    /* Panel */
+    /* Matches panel (cosmetic table) */
     .panel {
       background: var(--bg-1);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .panel-head {
-      padding: 16px 24px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 18px;
       border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      flex-wrap: wrap;
     }
     .panel-head h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase;
+      margin: 0;
     }
-    .panel-body { padding: 24px; }
+    .panel-head .pills { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+    .panel-head .pill {
+      padding: 5px 10px;
+      background: var(--bg-2); border: 1px solid var(--line);
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-dim);
+      cursor: pointer;
+    }
+    .panel-head .pill.active {
+      background: var(--accent); color: var(--bg-0);
+      border-color: var(--accent); font-weight: 700;
+    }
+    .panel-head .pill.primary {
+      background: var(--accent); color: var(--bg-0);
+      border-color: var(--accent); font-weight: 700;
+    }
+    .panel-body { padding: 16px 18px; }
 
-    /* Form */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .matches-toolbar {
+      display: flex; gap: 8px; align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+    .matches-toolbar input[type=search] {
+      flex: 1; min-width: 200px;
+      padding: 8px 12px;
+      background: var(--bg-2); border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    }
+    .matches-toolbar .pill { margin: 0; }
+
+    table.matches-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table.matches-table th,
+    table.matches-table td {
+      padding: 12px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+    table.matches-table th {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+      background: var(--bg-0);
+    }
+    table.matches-table td.id {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--ink-mute);
+    }
+    table.matches-table .match-cell {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    table.matches-table .match-cell .vs {
+      color: var(--ink-mute);
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.14em;
+      margin: 0 4px;
+    }
+    table.matches-table .team-logo {
+      width: 22px; height: 22px; font-size: 9px;
+    }
+    table.matches-table td.stage,
+    table.matches-table td.hora {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      color: var(--ink-dim);
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 700;
+    }
+    .status-pill.live {
+      color: #ff5774;
+      background: rgba(255, 87, 116, 0.12);
+      border: 1px solid rgba(255, 87, 116, 0.3);
+    }
+    .status-pill.live::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #ff5774;
+      animation: blink 1s ease-in-out infinite;
+    }
+    .status-pill.upcoming {
+      color: var(--accent-2);
+      background: rgba(76, 201, 255, 0.1);
+      border: 1px solid rgba(76, 201, 255, 0.3);
+    }
+    .status-pill.finished {
+      color: var(--ink-mute);
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+    }
+    .actions {
+      display: inline-flex; gap: 4px;
+    }
+    .actions button {
+      width: 26px; height: 26px;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink-dim);
+      cursor: pointer;
+      display: grid; place-items: center;
+      font-size: 12px;
+    }
+    .actions button:hover { color: var(--accent); border-color: var(--line-strong); }
+
+    /* Cadastro/usuarios form */
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
     .form-field label {
       display: block;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--ink-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-mute);
       margin-bottom: 6px;
     }
     .form-field input {
       width: 100%;
-      box-sizing: border-box;
-      background: var(--bg-2);
-      border: 1px solid var(--line-strong);
+      padding: 9px 12px;
+      background: var(--bg-2); border: 1px solid var(--line);
       border-radius: var(--radius);
       color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      padding: 10px 12px;
-      outline: none;
-      transition: border-color .2s;
+      font-family: 'Inter', sans-serif; font-size: 13px;
     }
-    .form-field input:focus { border-color: var(--accent); }
+    .form-field input:focus { border-color: var(--accent); outline: none; }
     .form-btn-row {
-      display: flex;
-      gap: 10px;
+      margin-top: 12px;
+      display: flex; gap: 8px;
     }
-    .btn-sm { padding: 8px 16px; font-size: 13px; }
-
-    /* Search + actions */
     .list-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
+      padding: 12px 18px;
       border-bottom: 1px solid var(--line);
     }
     .search-wrap {
-      flex: 1;
       position: relative;
+      max-width: 320px;
+    }
+    .search-wrap .search-icon {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--ink-mute);
     }
     .search-wrap input {
       width: 100%;
-      box-sizing: border-box;
-      background: var(--bg-2);
-      border: 1px solid var(--line-strong);
+      padding: 8px 12px 8px 32px;
+      background: var(--bg-2); border: 1px solid var(--line);
       border-radius: var(--radius);
       color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      padding: 9px 12px 9px 36px;
-      outline: none;
-      transition: border-color .2s;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
     }
-    .search-wrap input:focus { border-color: var(--accent); }
-    .search-icon {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--ink-mute);
-      pointer-events: none;
-    }
+    #lista-usuarios { list-style: none; padding: 0; margin: 0; }
 
-    /* User list */
-    #lista-usuarios {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    #lista-usuarios li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
-      border-bottom: 1px solid var(--line);
-      font-size: 14px;
-    }
-    #lista-usuarios li:last-child { border-bottom: none; }
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--bg-2);
-      border: 1px solid var(--line-strong);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--accent);
-      flex-shrink: 0;
-    }
-    .user-info { flex: 1; }
-    .user-name { font-weight: 600; color: var(--ink); }
-    .user-email { font-size: 12px; color: var(--ink-mute); }
-
-    @media (max-width: 900px) {
+    @media (max-width: 1024px) {
       .admin-layout { grid-template-columns: 1fr; }
-      .admin-sidebar { display: none; }
+      .admin-sidebar { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+      .admin-sidebar-section { display: none; }
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
-      .form-row { grid-template-columns: 1fr; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
       .kpi-row { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body data-page="admin">
+
   <div id="site-nav"></div>
 
-  <div class="container">
-    <div class="admin-layout">
-
-      <!-- Sidebar -->
-      <aside class="admin-sidebar">
-        <div class="admin-sidebar-header">Painel Admin</div>
-        <span class="admin-nav-item active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          Usuários
-        </span>
-        <a href="pickem.html" class="admin-nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-          Pick'em
-        </a>
-        <a href="index.html" class="admin-nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          Voltar ao Hub
-        </a>
-      </aside>
-
-      <!-- Main -->
-      <main class="admin-main">
-        <div class="admin-page-head">
-          <h1>Painel Administrativo</h1>
-          <p>Gerencie os participantes inscritos no Pick'em da comunidade.</p>
-        </div>
-
-        <!-- KPIs -->
-        <div class="kpi-row">
-          <div class="kpi-card">
-            <div class="kpi-label">Total de usuários</div>
-            <div class="kpi-val" id="kpi-total">—</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Com Pick'em</div>
-            <div class="kpi-val cyan" id="kpi-pickem">—</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">Cadastros hoje</div>
-            <div class="kpi-val" id="kpi-hoje">—</div>
-          </div>
-        </div>
-
-        <!-- Cadastro rápido -->
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Cadastrar Usuário</h2>
-          </div>
-          <div class="panel-body">
-            <form id="form-admin" novalidate>
-              <div class="form-row">
-                <div class="form-field">
-                  <label for="input-nome">Nome</label>
-                  <input id="input-nome" name="nome" type="text" required placeholder="Nome do usuário">
-                </div>
-                <div class="form-field">
-                  <label for="input-email">E-mail</label>
-                  <input id="input-email" name="email" type="email" required placeholder="email@exemplo.com">
-                </div>
-              </div>
-              <div class="form-btn-row">
-                <button id="btn-cadastrar" type="submit" class="btn primary btn-sm">Cadastrar</button>
-                <button id="btn-limpar" type="button" class="btn ghost btn-sm">Limpar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Lista de usuários -->
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Participantes</h2>
-            <div style="display:flex;gap:8px;">
-              <button id="btn-seed" type="button" class="btn ghost btn-sm" title="Popula a lista com usuários fictícios para demonstração">Dados de exemplo</button>
-              <button id="btn-limpar-tudo" type="button" class="btn ghost btn-sm">Excluir todos</button>
-            </div>
-          </div>
-          <div class="list-controls">
-            <div class="search-wrap">
-              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-              <input id="busca" type="search" placeholder="Pesquisar por nome ou e-mail...">
-            </div>
-          </div>
-          <ul id="lista-usuarios"></ul>
-        </div>
-      </main>
-
+  <header class="page-head">
+    <div class="page-head-inner">
+      <div class="crumbs"><a href="index.html">Major Hub</a><span class="sep">/</span><span>Admin</span></div>
+      <div class="admin-restrict-badge">Admin · Acesso Restrito</div>
+      <h1 class="page-title">Control<br><span class="accent">Panel</span></h1>
+      <p class="page-sub">Gerenciamento de partidas, times, usuários e pick'em. Apenas para staff autorizado do Major Hub.</p>
     </div>
-  </div>
+  </header>
+
+  <main>
+    <section class="block">
+      <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+          <div class="admin-sidebar-section">Conteúdo</div>
+          <a href="#" class="admin-nav-item active">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+          </a>
+          <a href="matches.html" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Matches <span class="badge">35</span>
+          </a>
+          <a href="teams.html" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            Teams <span class="badge">32</span>
+          </a>
+          <a href="main-event.html" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Schedule
+          </a>
+          <a href="pickem.html" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Pick'em <span class="badge">4</span>
+          </a>
+
+          <div class="admin-sidebar-section">Comunidade</div>
+          <a href="#usuarios" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Usuários <span class="badge" id="sidebar-users-badge">—</span>
+          </a>
+          <a href="#" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Reports <span class="badge">3</span>
+          </a>
+
+          <div class="admin-sidebar-section">Sistema</div>
+          <a href="index.html" class="admin-nav-item">
+            <svg class="ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Voltar ao Hub
+          </a>
+        </aside>
+
+        <!-- Main -->
+        <div class="admin-main">
+
+          <!-- KPIs -->
+          <div class="kpi-row">
+            <div class="kpi-card">
+              <div class="kpi-label">Usuários ativos</div>
+              <div class="kpi-val" id="kpi-total">—</div>
+              <div class="kpi-delta" id="kpi-total-delta">↑ 0 nas últimas 24h</div>
+              <div class="kpi-spark" aria-hidden="true">
+                <span style="height:30%"></span><span style="height:50%"></span><span style="height:42%"></span><span style="height:62%"></span><span style="height:55%"></span><span style="height:78%"></span><span style="height:88%"></span><span style="height:100%"></span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Picks Stage 2</div>
+              <div class="kpi-val" id="kpi-pickem">—</div>
+              <div class="kpi-delta">↑ 240 · 24h</div>
+              <div class="kpi-spark" aria-hidden="true">
+                <span style="height:25%"></span><span style="height:48%"></span><span style="height:55%"></span><span style="height:50%"></span><span style="height:72%"></span><span style="height:80%"></span><span style="height:92%"></span><span style="height:100%"></span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Matches hoje</div>
+              <div class="kpi-val">06</div>
+              <div class="kpi-delta">2 live · 4 upcoming</div>
+              <div class="kpi-spark" aria-hidden="true">
+                <span style="height:40%"></span><span style="height:55%"></span><span style="height:48%"></span><span style="height:65%"></span><span style="height:72%"></span><span style="height:85%"></span><span style="height:92%"></span><span style="height:80%"></span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Reports abertos</div>
+              <div class="kpi-val orange">03</div>
+              <div class="kpi-delta orange">+1 nas últimas 6h</div>
+              <div class="kpi-spark orange" aria-hidden="true">
+                <span style="height:30%"></span><span style="height:25%"></span><span style="height:35%"></span><span style="height:28%"></span><span style="height:40%"></span><span style="height:30%"></span><span style="height:55%"></span><span style="height:75%"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Matches panel (cosmético) -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Matches · Próximos &amp; Recentes</h2>
+              <div class="pills">
+                <button type="button" class="pill active">Todas</button>
+                <button type="button" class="pill">Live</button>
+                <button type="button" class="pill">Upcoming</button>
+                <button type="button" class="pill">Finalizadas</button>
+                <button type="button" class="pill primary">+ Nova</button>
+              </div>
+            </div>
+            <div class="matches-toolbar">
+              <input type="search" placeholder="Buscar por time, mapa ou stage...">
+              <button type="button" class="pill">Stage 1</button>
+              <button type="button" class="pill active">Stage 2</button>
+              <button type="button" class="pill">Stage 3</button>
+              <button type="button" class="pill">Playoffs</button>
+              <button type="button" class="pill" style="margin-left:auto;">Exportar CSV</button>
+            </div>
+            <table class="matches-table">
+              <thead>
+                <tr>
+                  <th>ID</th><th>Partida</th><th>Stage · Round</th><th>Horário</th><th>Status</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="id">#M-073</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">VIT</div>Vitality
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">SPI</div>Spirit
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R3</td>
+                  <td class="hora">04 Jun · 16:30 CET</td>
+                  <td><span class="status-pill live">Live</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Acompanhar">▶</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+                <tr>
+                  <td class="id">#M-074</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">FUR</div>FURIA
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">NAV</div>NAVI
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R3</td>
+                  <td class="hora">04 Jun · 19:00 CET</td>
+                  <td><span class="status-pill upcoming">Upcoming</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Acompanhar">▶</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+                <tr>
+                  <td class="id">#M-072</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">MBR</div>MIBR
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">MGZ</div>The MongolZ
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R2</td>
+                  <td class="hora">03 Jun · 21:30 CET</td>
+                  <td><span class="status-pill finished">Finalizada</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Acompanhar">▶</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Cadastro rápido -->
+          <div class="panel" id="usuarios">
+            <div class="panel-head">
+              <h2>Cadastrar Usuário</h2>
+            </div>
+            <div class="panel-body">
+              <form id="form-admin" novalidate>
+                <div class="form-row">
+                  <div class="form-field">
+                    <label for="input-nome">Nome</label>
+                    <input id="input-nome" name="nome" type="text" required placeholder="Nome do usuário">
+                  </div>
+                  <div class="form-field">
+                    <label for="input-email">E-mail</label>
+                    <input id="input-email" name="email" type="email" required placeholder="email@exemplo.com">
+                  </div>
+                </div>
+                <div class="form-btn-row">
+                  <button id="btn-cadastrar" type="submit" class="btn primary btn-sm">Cadastrar</button>
+                  <button id="btn-limpar" type="button" class="btn ghost btn-sm">Limpar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Lista de usuários -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Participantes</h2>
+              <div class="pills">
+                <button id="btn-seed" type="button" class="pill" title="Popula a lista com usuários fictícios para demonstração">Dados de exemplo</button>
+                <button id="btn-limpar-tudo" type="button" class="pill">Excluir todos</button>
+              </div>
+            </div>
+            <div class="list-controls">
+              <div class="search-wrap">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <input id="busca" type="search" placeholder="Pesquisar por nome ou e-mail...">
+              </div>
+            </div>
+            <ul id="lista-usuarios"></ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
 
   <div id="site-foot"></div>
   <script src="js/site.js"></script>
