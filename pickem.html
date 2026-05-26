@@ -247,6 +247,35 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
+    /* Locked slots (Stage 3 preview e Playoffs preview) */
+    .locked-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    }
+    @media (max-width: 768px) { .locked-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .locked-row { grid-template-columns: 1fr; } }
+    .pick-slot.locked {
+      cursor: not-allowed;
+      background: rgba(255,255,255,0.02);
+      border-style: dashed;
+      border-color: var(--line);
+      color: var(--ink-mute);
+    }
+    .pick-slot.locked:hover {
+      border-color: var(--line);
+      color: var(--ink-mute);
+    }
+    .pick-slot.locked.locked-wide { width: 100%; }
+    .pick-slot .lock-icon,
+    .pick-slot .trophy-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+      color: var(--ink-mute);
+    }
+
     /* Top-8 grid (Stage 3 checkboxes) */
     .top8-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
@@ -494,29 +523,56 @@
               </div>
             </section>
 
-            <!-- Stage 3 — open -->
+            <!-- Stage 3 — bloqueado (preview) -->
             <section class="pk-stage" data-stage="stage3">
               <div class="stage-head">
-                <h2>Stage 3 · Legends</h2>
-                <span class="stage-deadline">Fecha em 6d</span>
-                <span class="stage-status" id="status-stage3">0 / 8 picks</span>
+                <h2>Stage 3 · Swiss</h2>
+                <span class="stage-badge-pts" style="color:var(--accent-2);background:rgba(76,201,255,0.12);border-color:rgba(76,201,255,0.3);">Disponível em 7 dias</span>
+                <span class="stage-status">Fecha 11 Jun · 14:00 CET</span>
               </div>
-              <div class="pick-group">
-                <span class="pick-label">Top 8 que avançam aos Playoffs <span class="pts">· 2 pts cada</span></span>
-                <div class="top8-grid" id="top8-grid"></div>
+              <div class="locked-row">
+                <div class="pick-slot locked" aria-disabled="true">
+                  <span class="lock-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </span>
+                  <span>Bloqueado</span>
+                </div>
+                <div class="pick-slot locked" aria-disabled="true">
+                  <span class="lock-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </span>
+                  <span>Bloqueado</span>
+                </div>
+                <div class="pick-slot locked" aria-disabled="true">
+                  <span class="lock-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </span>
+                  <span>Bloqueado</span>
+                </div>
+                <div class="pick-slot locked" aria-disabled="true">
+                  <span class="lock-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </span>
+                  <span>Bloqueado</span>
+                </div>
               </div>
             </section>
 
-            <!-- Playoffs — open -->
+            <!-- Playoffs — bloqueado (preview) -->
             <section class="pk-stage" data-stage="playoffs">
               <div class="stage-head">
                 <h2>Playoffs</h2>
-                <span class="stage-deadline">Fecha em 24d</span>
-                <span class="stage-status" id="status-playoffs">0 / 1 picks</span>
+                <span class="stage-badge-pts" style="color:var(--accent-2);background:rgba(76,201,255,0.12);border-color:rgba(76,201,255,0.3);">Disponível em 14 dias</span>
+                <span class="stage-status">Champion: até 40 pts</span>
               </div>
               <div class="pick-group">
-                <span class="pick-label">Campeão do Major · escolha 1 <span class="pts">· 40 pts</span></span>
-                <div class="top8-grid" id="playoffs-grid"></div>
+                <span class="pick-label">Pick do campeão</span>
+                <div class="pick-slot locked locked-wide" aria-disabled="true">
+                  <span class="trophy-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21L7 19"/><path d="M14 14.66V17c0 .55.47.98.97 1.21L17 19"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                  </span>
+                  <span>Bloqueado até 18 Jun</span>
+                </div>
               </div>
             </section>
 
@@ -567,8 +623,8 @@
   </main>
 
   <div id="site-foot"></div>
-  <script src="js/site.js?v=3"></script>
-  <script src="js/pickem.js?v=3"></script>
-  <script src="js/auth.js?v=3"></script>
+  <script src="js/site.js?v=4"></script>
+  <script src="js/pickem.js?v=4"></script>
+  <script src="js/auth.js?v=4"></script>
 </body>
 </html>
