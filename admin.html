@@ -242,6 +242,24 @@
       background: var(--bg-2);
       border: 1px solid var(--line);
     }
+    .status-pill.upcoming::before,
+    .status-pill.final::before,
+    .status-pill.draft::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+    }
+    .status-pill.upcoming::before { background: var(--accent-2); }
+    .status-pill.final {
+      color: var(--win);
+      background: rgba(46,204,113,0.12);
+      border: 1px solid rgba(46,204,113,0.3);
+    }
+    .status-pill.final::before { background: var(--win); }
+    .status-pill.draft {
+      color: var(--ink-mute);
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+    }
+    .status-pill.draft::before { background: var(--ink-mute); }
     .actions {
       display: inline-flex; gap: 4px;
     }
@@ -256,6 +274,133 @@
       font-size: 12px;
     }
     .actions button:hover { color: var(--accent); border-color: var(--line-strong); }
+
+    /* Dashboard bottom grid (Usuários Recentes + Atividade Recente) */
+    .dash-bottom {
+      display: grid; grid-template-columns: 1.55fr 1fr;
+      gap: 14px; margin-bottom: 18px;
+      align-items: start;
+    }
+    .dash-bottom .panel { margin-bottom: 0; }
+    .panel-head .text-link {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-mute);
+      text-decoration: none;
+    }
+    .panel-head .text-link:hover { color: var(--accent); }
+
+    /* Usuários Recentes table */
+    table.recent-users {
+      width: 100%; border-collapse: collapse;
+    }
+    table.recent-users th,
+    table.recent-users td {
+      padding: 12px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+    table.recent-users th {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+      background: var(--bg-0);
+    }
+    table.recent-users tbody tr:last-child td { border-bottom: 0; }
+    .user-cell { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 11px; letter-spacing: 0.04em;
+      color: #0e0e12;
+      flex-shrink: 0;
+    }
+    .avatar.amber  { background: #e6b520; }
+    .avatar.green  { background: #2ecc71; }
+    .avatar.orange { background: #e67e22; }
+    .avatar.blue   { background: #4cc9ff; }
+    .avatar.violet { background: #7f8cff; color: #fff; }
+    .user-name {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 14px; letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+    table.recent-users .email-cell {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: var(--ink-dim);
+    }
+    .picks-cell {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 15px; line-height: 1.1; color: var(--ink);
+    }
+    .picks-cell .unit {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--ink-mute);
+      letter-spacing: 0.08em;
+    }
+    .status-pill.active-status {
+      color: var(--win);
+      background: rgba(46,204,113,0.12);
+      border: 1px solid rgba(46,204,113,0.3);
+    }
+    .status-pill.active-status::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--win);
+    }
+    .status-pill.pending-status {
+      color: var(--warn);
+      background: rgba(255,154,60,0.12);
+      border: 1px solid rgba(255,154,60,0.3);
+    }
+    .status-pill.pending-status::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--warn);
+    }
+    .status-pill.admin-status {
+      color: var(--accent-2);
+      background: rgba(76,201,255,0.12);
+      border: 1px solid rgba(76,201,255,0.3);
+    }
+    .status-pill.admin-status::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2);
+    }
+
+    /* Atividade Recente */
+    .activity-list { list-style: none; padding: 0; margin: 0; }
+    .activity-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .activity-item:last-child { border-bottom: 0; }
+    .activity-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .activity-dot.green  { background: var(--win); }
+    .activity-dot.blue   { background: var(--accent-2); }
+    .activity-dot.orange { background: var(--warn); }
+    .activity-dot.pink   { background: var(--loss); }
+    .activity-text {
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; color: var(--ink-dim);
+      line-height: 1.45;
+    }
+    .activity-text strong { color: var(--ink); font-weight: 600; }
+    .activity-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--ink-mute);
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1280px) {
+      .dash-bottom { grid-template-columns: 1fr; }
+    }
 
     /* Cadastro/usuarios form */
     .form-row {
@@ -457,32 +602,222 @@
                   <td class="id">#M-074</td>
                   <td>
                     <div class="match-cell">
-                      <div class="team-logo" aria-hidden="true">FUR</div>FURIA
+                      <div class="team-logo" aria-hidden="true">FZE</div>FaZe
                       <span class="vs">vs</span>
                       <div class="team-logo" aria-hidden="true">NAV</div>NAVI
                     </div>
                   </td>
                   <td class="stage">Stage 1 · R3</td>
-                  <td class="hora">04 Jun · 19:00 CET</td>
-                  <td><span class="status-pill upcoming">Upcoming</span></td>
+                  <td class="hora">04 Jun · 17:00 CET</td>
+                  <td><span class="status-pill live">Live</span></td>
                   <td><div class="actions"><button title="Editar">✎</button><button title="Acompanhar">▶</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+                <tr>
+                  <td class="id">#M-075</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">MBR</div>MIBR
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">MON</div>MongolZ
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R3</td>
+                  <td class="hora">04 Jun · 18:00 CET</td>
+                  <td><span class="status-pill upcoming">Upcoming</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Notificar">🔔</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+                <tr>
+                  <td class="id">#M-076</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">G2</div>G2
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">FLC</div>Falcons
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R3</td>
+                  <td class="hora">04 Jun · 19:30 CET</td>
+                  <td><span class="status-pill upcoming">Upcoming</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Notificar">🔔</button><button title="Cancelar">✕</button></div></td>
                 </tr>
                 <tr>
                   <td class="id">#M-072</td>
                   <td>
                     <div class="match-cell">
-                      <div class="team-logo" aria-hidden="true">MBR</div>MIBR
+                      <div class="team-logo" aria-hidden="true">VIT</div>Vitality
                       <span class="vs">vs</span>
-                      <div class="team-logo" aria-hidden="true">MGZ</div>The MongolZ
+                      <div class="team-logo" aria-hidden="true">G2</div>G2
                     </div>
                   </td>
                   <td class="stage">Stage 1 · R2</td>
-                  <td class="hora">03 Jun · 21:30 CET</td>
-                  <td><span class="status-pill finished">Finalizada</span></td>
-                  <td><div class="actions"><button title="Editar">✎</button><button title="Acompanhar">▶</button><button title="Cancelar">✕</button></div></td>
+                  <td class="hora">03 Jun · 18:00 CET</td>
+                  <td><span class="status-pill final">Final 2-0</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Placar">▦</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+                <tr>
+                  <td class="id">#M-071</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">NAV</div>NAVI
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">CLD</div>Cloud9
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R2</td>
+                  <td class="hora">03 Jun · 15:00 CET</td>
+                  <td><span class="status-pill final">Final 2-1</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Placar">▦</button><button title="Cancelar">✕</button></div></td>
+                </tr>
+                <tr>
+                  <td class="id">#M-077</td>
+                  <td>
+                    <div class="match-cell">
+                      <div class="team-logo" aria-hidden="true">?</div>TBD
+                      <span class="vs">vs</span>
+                      <div class="team-logo" aria-hidden="true">?</div>TBD
+                    </div>
+                  </td>
+                  <td class="stage">Stage 1 · R4</td>
+                  <td class="hora">05 Jun · 17:00 CET</td>
+                  <td><span class="status-pill draft">Draft</span></td>
+                  <td><div class="actions"><button title="Editar">✎</button><button title="Rascunho">✏</button><button title="Cancelar">✕</button></div></td>
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Dashboard bottom: Usuários Recentes + Atividade Recente -->
+          <div class="dash-bottom">
+
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Usuários Recentes</h2>
+                <div class="pills">
+                  <button type="button" class="pill active">Novos</button>
+                  <button type="button" class="pill">Pendentes</button>
+                  <button type="button" class="pill">Banidos</button>
+                </div>
+              </div>
+              <table class="recent-users">
+                <thead>
+                  <tr>
+                    <th>Usuário</th><th>E-mail</th><th>Picks</th><th>Status</th><th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar amber" aria-hidden="true">SK</div>
+                        <span class="user-name">s1mple_fan</span>
+                      </div>
+                    </td>
+                    <td class="email-cell">simple@hotmail.com</td>
+                    <td><div class="picks-cell">96<span class="unit">pts</span></div></td>
+                    <td><span class="status-pill active-status">Ativo</span></td>
+                    <td><div class="actions"><button title="Editar">✎</button><button title="Banir">⛔</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar green" aria-hidden="true">ZW</div>
+                        <span class="user-name">zywoo_GOAT</span>
+                      </div>
+                    </td>
+                    <td class="email-cell">zwoo@gmail.com</td>
+                    <td><div class="picks-cell">88<span class="unit">pts</span></div></td>
+                    <td><span class="status-pill active-status">Ativo</span></td>
+                    <td><div class="actions"><button title="Editar">✎</button><button title="Banir">⛔</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar orange" aria-hidden="true">FU</div>
+                        <span class="user-name">furia4ever</span>
+                      </div>
+                    </td>
+                    <td class="email-cell">furia@outlook.com</td>
+                    <td><div class="picks-cell">76<span class="unit">pts</span></div></td>
+                    <td><span class="status-pill pending-status">Pendente</span></td>
+                    <td><div class="actions"><button title="Aprovar">✓</button><button title="Recusar">✕</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar violet" aria-hidden="true">FB</div>
+                        <span class="user-name">FalleN_BR</span>
+                      </div>
+                    </td>
+                    <td class="email-cell">fln@mibr.com.br</td>
+                    <td><div class="picks-cell">80<span class="unit">pts</span></div></td>
+                    <td><span class="status-pill active-status">Ativo</span></td>
+                    <td><div class="actions"><button title="Editar">✎</button><button title="Banir">⛔</button></div></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar blue" aria-hidden="true">VC</div>
+                        <span class="user-name">você</span>
+                      </div>
+                    </td>
+                    <td class="email-cell">kauan@hotmail.com</td>
+                    <td><div class="picks-cell">42<span class="unit">pts</span></div></td>
+                    <td><span class="status-pill admin-status">Admin</span></td>
+                    <td><div class="actions"><button title="Editar">✎</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Atividade Recente</h2>
+                <a href="#" class="text-link">Ver tudo</a>
+              </div>
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <span class="activity-dot green" aria-hidden="true"></span>
+                  <span class="activity-text">s1mple_fan acertou pick <strong>3-0 (Vitality)</strong></span>
+                  <span class="activity-time">2m</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot blue" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>Match #M-073</strong> iniciou (Vitality vs Spirit)</span>
+                  <span class="activity-time">8m</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot orange" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>furia4ever</strong> aguardando aprovação</span>
+                  <span class="activity-time">15m</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot pink" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>Report novo</strong> · spam no chat</span>
+                  <span class="activity-time">23m</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot blue" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>240 novos picks</strong> para Stage 2</span>
+                  <span class="activity-time">1h</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot blue" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>schedule</strong> atualizado (R4 publicada)</span>
+                  <span class="activity-time">2h</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot orange" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>Stream offline</strong> · Court 2</span>
+                  <span class="activity-time">3h</span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-dot green" aria-hidden="true"></span>
+                  <span class="activity-text"><strong>Backup</strong> do banco concluído</span>
+                  <span class="activity-time">6h</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
 
           <!-- Cadastro rápido -->
