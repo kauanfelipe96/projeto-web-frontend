@@ -13,7 +13,7 @@
   --ink: #eaf0ff;
   --ink-dim: #9aa6cc;
   --ink-mute: #6e7aa3;
-  --accent: #ffe03b;
+  --accent: #4cc9ff;
   --accent-ink: #0a0f24;
   --accent-2: #4cc9ff;
   --win: #2ecc71;
@@ -86,7 +86,7 @@ button { font-family: inherit; }
   white-space: nowrap;
 }
 .nav-link:hover { color: var(--ink); }
-.nav-link.active { color: var(--accent); border-bottom-color: var(--accent); background: linear-gradient(to top, rgba(255,224,59,0.08), transparent); }
+.nav-link.active { color: var(--accent); border-bottom-color: var(--accent); background: linear-gradient(to top, rgba(76, 201, 255,0.08), transparent); }
 
 .nav-cta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .nav-user {
@@ -137,7 +137,7 @@ button { font-family: inherit; }
   border-bottom: 1px solid var(--line);
   transition: color .12s, background .12s;
 }
-.nav-drawer .nd-link.active { color: var(--accent); background: rgba(255,224,59,0.06); }
+.nav-drawer .nd-link.active { color: var(--accent); background: rgba(76, 201, 255,0.06); }
 .nav-drawer-cta {
   display: flex; gap: 8px;
   padding: 14px 20px 18px;
@@ -550,7 +550,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
   border-bottom: 1px solid var(--line);
   background:
     radial-gradient(ellipse 80% 60% at 50% -10%, rgba(76, 201, 255, 0.18), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255, 224, 59, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(76, 201, 255, 0.08), transparent 60%),
     linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
 }
 .hero-poly {
@@ -700,7 +700,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
 .about-card:hover::after { opacity: 1; }
 .about-icon {
   width: 36px; height: 36px;
-  background: rgba(255, 224, 59, 0.1); color: var(--accent);
+  background: rgba(76, 201, 255, 0.1); color: var(--accent);
   display: grid; place-items: center; margin-bottom: 16px;
   clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
 }
@@ -881,7 +881,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
   padding: 22px 16px;
   text-align: center;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
-  box-shadow: 0 0 24px rgba(255, 224, 59, 0.18);
+  box-shadow: 0 0 24px rgba(76, 201, 255, 0.18);
 }
 .champion-card .trophy { font-size: 36px; color: var(--accent); }
 .champion-card .ch-name {
@@ -926,7 +926,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
 }
 .stage-badge.s1 { color: var(--warn);    background: rgba(255,154,60,0.1);   border: 1px solid rgba(255,154,60,0.25); }
 .stage-badge.s2 { color: var(--accent-2);background: rgba(76,201,255,0.1);   border: 1px solid rgba(76,201,255,0.25); }
-.stage-badge.s3 { color: var(--accent);  background: rgba(255,224,59,0.1);   border: 1px solid rgba(255,224,59,0.25); }
+.stage-badge.s3 { color: var(--accent);  background: rgba(76, 201, 255,0.1);   border: 1px solid rgba(76, 201, 255,0.25); }
 .stage-badge.po { color: var(--win);     background: rgba(46,204,113,0.1);   border: 1px solid rgba(46,204,113,0.25); }
 @media (max-width: 768px) {
   .sched-row { grid-template-columns: 1fr; gap: 6px; padding: 10px 12px; }
@@ -948,7 +948,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
   letter-spacing: 0.18em; text-transform: uppercase;
   padding: 3px 8px; border-radius: 3px;
 }
-.tier-badge.legends    { color: var(--accent);   background: rgba(255,224,59,0.1);  border: 1px solid rgba(255,224,59,0.3); }
+.tier-badge.legends    { color: var(--accent);   background: rgba(76, 201, 255,0.1);  border: 1px solid rgba(76, 201, 255,0.3); }
 .tier-badge.challengers{ color: var(--accent-2); background: rgba(76,201,255,0.1);  border: 1px solid rgba(76,201,255,0.3); }
 .tier-badge.contenders { color: var(--warn);     background: rgba(255,154,60,0.1);  border: 1px solid rgba(255,154,60,0.3); }
 .tier-head::after {
@@ -1039,7 +1039,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
   position: absolute; inset: 0;
   background:
     radial-gradient(ellipse 50% 60% at 30% 50%, rgba(76,201,255,0.2), transparent 70%),
-    radial-gradient(ellipse 50% 60% at 70% 50%, rgba(255,224,59,0.15), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 70% 50%, rgba(76, 201, 255,0.15), transparent 70%),
     linear-gradient(180deg, transparent 30%, rgba(6,9,26,0.85) 100%);
   pointer-events: none;
 }
@@ -1151,7 +1151,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
 .pick-section-head .pts {
-  background: rgba(255, 224, 59, 0.12); color: var(--accent);
+  background: rgba(76, 201, 255, 0.12); color: var(--accent);
   padding: 3px 8px; border-radius: 999px;
   font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700;
 }
@@ -1244,7 +1244,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
   border-bottom: 1px solid var(--line);
 }
 .lb-row:last-child { border-bottom: none; }
-.lb-row.me { background: rgba(255,224,59,0.06); }
+.lb-row.me { background: rgba(76, 201, 255,0.06); }
 .lb-row .rank {
   font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
   font-size: 16px; color: var(--ink-mute);
@@ -1331,7 +1331,7 @@ table.data tbody tr:last-child td { border-bottom: none; }
 .admin-link.active {
   color: var(--accent);
   border-left-color: var(--accent);
-  background: rgba(255,224,59,0.06);
+  background: rgba(76, 201, 255,0.06);
 }
 .admin-link .count {
   margin-left: auto;
