@@ -51,17 +51,31 @@
       font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--ink-mute);
     }
-    .status-card.complete { border-bottom-color: var(--win); }
+    .status-card.complete {
+      border-bottom-color: var(--win);
+      background: linear-gradient(180deg, rgba(46,204,113,0.06) 0%, var(--bg-1) 70%);
+    }
     .status-card.complete .status-title { color: var(--ink); }
-    .status-card.complete .status-state { color: var(--win); }
-    .status-card.complete .status-state::before { content: '✓ '; }
-    .status-card.active { border-bottom-color: var(--accent); }
-    .status-card.active .status-title { color: var(--accent); }
-    .status-card.active .status-state { color: var(--accent); }
+    .status-card.complete .status-state {
+      color: var(--win);
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(46,204,113,0.45);
+    }
+    .status-card.complete .status-state::before { content: '✓ '; font-weight: 800; }
+    .status-card.active {
+      border-bottom-color: var(--accent);
+      background: linear-gradient(180deg, rgba(76,201,255,0.08) 0%, var(--bg-1) 70%);
+      box-shadow: 0 4px 16px rgba(76,201,255,0.10);
+    }
+    .status-card.active .status-title {
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(76,201,255,0.35);
+    }
+    .status-card.active .status-state { color: var(--accent); font-weight: 700; }
     .status-card.locked .status-title,
     .status-card.locked .status-state { color: var(--ink-mute); }
     .status-card.soon .status-title,
-    .status-card.soon .status-state { color: var(--ink-mute); opacity: 0.6; }
+    .status-card.soon .status-state { color: var(--ink-mute); opacity: 0.55; }
 
     @media (max-width: 900px) { .status-cards { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px) { .status-cards { grid-template-columns: 1fr; } }
@@ -417,7 +431,7 @@
           <div class="status-card" id="status-card-1">
             <div class="status-meta">STAGE 1 · ROUND 1</div>
             <div class="status-title">OPENING</div>
-            <div class="status-state">EM ANDAMENTO</div>
+            <div class="status-state">AGUARDANDO</div>
           </div>
           <div class="status-card" id="status-card-2">
             <div class="status-meta">STAGE 2 · ROUNDS 2 &amp; 3</div>
@@ -648,7 +662,7 @@
 
   <div id="site-foot"></div>
   <script src="js/site.js?v=5"></script>
-  <script src="js/pickem.js?v=9"></script>
+  <script src="js/pickem.js?v=10"></script>
   <script src="js/auth.js?v=5"></script>
 </body>
 </html>

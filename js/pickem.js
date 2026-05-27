@@ -319,8 +319,8 @@ function updateStatusCards() {
     var stateEl = card.querySelector('.status-state');
     if (stateEl) {
       stateEl.textContent =
-        status === 'complete' ? 'COMPLETO' :
-        status === 'active'   ? 'EM ANDAMENTO' :
+        status === 'complete' ? 'FINALIZADO' :
+        status === 'active'   ? 'AGUARDANDO' :
         status === 'soon'     ? 'EM BREVE' :
                                 'BLOQUEADO';
     }
