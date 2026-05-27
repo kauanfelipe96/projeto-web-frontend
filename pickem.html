@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Pick'em Challenge do IEM Cologne Major 2026 — preveja os resultados de cada stage e dispute pontos no leaderboard.">
-  <title>Pick'em — IEM Cologne Major 2026</title>
+  <meta name="description" content="Simulador do IEM Cologne Major 2026 — preveja todas as fases do Swiss e dispute pontos no leaderboard.">
+  <title>Pick'em Simulator — IEM Cologne Major 2026</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    /* ====== PICKEM PAGE ====== */
+    /* ====== PICKEM SIMULATOR ====== */
     #aviso-login {
       max-width: 480px; margin: 48px auto;
       background: var(--bg-1); border: 1px solid var(--line-strong);
@@ -21,14 +21,249 @@
     #aviso-login p { font-size: 14px; color: var(--ink-dim); margin-bottom: 24px; }
     #aviso-login .auth-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-    /* 4 KPIs */
+    /* ===== Status cards (Stage 1 / 2 / 3 / Playoffs) ===== */
+    .status-cards {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      margin-bottom: 20px;
+    }
+    .status-card {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 18px 18px;
+      border-bottom: 3px solid transparent;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .status-card .status-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .status-card .status-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 22px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .status-card .status-state {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .status-card.complete { border-bottom-color: var(--win); }
+    .status-card.complete .status-title { color: var(--ink); }
+    .status-card.complete .status-state { color: var(--win); }
+    .status-card.complete .status-state::before { content: '✓ '; }
+    .status-card.active { border-bottom-color: var(--accent); }
+    .status-card.active .status-title { color: var(--accent); }
+    .status-card.active .status-state { color: var(--accent); }
+    .status-card.locked .status-title,
+    .status-card.locked .status-state { color: var(--ink-mute); }
+    .status-card.soon .status-title,
+    .status-card.soon .status-state { color: var(--ink-mute); opacity: 0.6; }
+
+    @media (max-width: 900px) { .status-cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .status-cards { grid-template-columns: 1fr; } }
+
+    /* ===== Top action bar ===== */
+    .action-bar {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .action-left { display: flex; gap: 10px; }
+    .action-right {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.08em;
+      color: var(--ink-dim);
+    }
+    .action-right b {
+      color: var(--accent); font-weight: 700;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 15px;
+      letter-spacing: 0.04em;
+      margin: 0 4px;
+    }
+    .btn-action {
+      padding: 10px 18px;
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 13px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink);
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-action.btn-reset-all {
+      color: var(--accent);
+      border-color: rgba(76, 201, 255, 0.5);
+    }
+    .btn-action:hover { border-color: var(--accent); }
+    .btn-action[disabled] {
+      opacity: 0.4; cursor: not-allowed;
+    }
+    .btn-action[disabled]:hover { border-color: var(--line-strong); }
+    .btn-action .x-icon { font-size: 16px; line-height: 1; }
+
+    /* ===== Simulator grid ===== */
+    .sim-wrap {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 220px 220px 220px 220px 220px;
+      gap: 12px;
+      min-width: max-content;
+    }
+    .sim-col { display: flex; flex-direction: column; gap: 12px; align-self: start; }
+
+    /* ===== Bucket cards ===== */
+    .sim-bucket {
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+    .sim-bucket.locked .bucket-body { opacity: 0.6; }
+    .sim-bucket.locked .bucket-label { color: var(--ink-mute); }
+    .sim-bucket.qualified {
+      background: rgba(46, 204, 113, 0.22);
+      border-color: rgba(46, 204, 113, 0.75);
+      box-shadow: inset 0 0 0 1px rgba(46, 204, 113, 0.15);
+    }
+    .sim-bucket.qualified .bucket-label {
+      color: #5dffa3;
+      text-shadow: 0 0 10px rgba(46, 204, 113, 0.45);
+    }
+    .sim-bucket.qualified .pill-logo {
+      border-color: rgba(46, 204, 113, 0.45);
+    }
+    .sim-bucket.eliminated {
+      background: rgba(255, 85, 119, 0.22);
+      border-color: rgba(255, 85, 119, 0.75);
+      box-shadow: inset 0 0 0 1px rgba(255, 85, 119, 0.15);
+    }
+    .sim-bucket.eliminated .bucket-label {
+      color: #ff8aa0;
+      text-shadow: 0 0 10px rgba(255, 85, 119, 0.45);
+    }
+    .sim-bucket.eliminated .pill-logo {
+      border-color: rgba(255, 85, 119, 0.45);
+    }
+
+    .bucket-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 10px; margin-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .bucket-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 16px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent);
+    }
+    .bucket-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+
+    .card-section + .card-section {
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px dashed rgba(255,255,255,0.12);
+    }
+
+    /* ===== Match rows + Team pills ===== */
+    .match-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 3px 0;
+    }
+    .card-slots {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .team-pill {
+      display: inline-flex; align-items: center;
+      width: 100%;
+      padding: 5px 10px 5px 5px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      gap: 8px;
+      cursor: pointer;
+      min-width: 0;
+      transition: border-color .15s, background .15s, opacity .15s, box-shadow .15s;
+    }
+    .team-pill:hover { border-color: var(--accent); }
+    .team-pill .pill-logo {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,0.04);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      color: var(--ink-mute);
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 11px;
+    }
+    .team-pill .pill-logo img {
+      max-width: 75%; max-height: 75%;
+      width: auto; height: auto; object-fit: contain;
+    }
+    .team-pill .pill-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 12px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink);
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .team-pill.winner {
+      border-color: var(--accent);
+      background: rgba(76, 201, 255, 0.10);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .team-pill.loser { opacity: 0.35; }
+    .team-pill.locked-team {
+      filter: grayscale(1) brightness(0.55);
+      cursor: not-allowed;
+    }
+    .team-pill.empty {
+      cursor: not-allowed;
+      background: rgba(0,0,0,0.15);
+      border-style: dashed;
+    }
+    .team-pill.empty .pill-name {
+      color: var(--ink-mute);
+      font-weight: 600;
+      font-style: italic;
+      letter-spacing: 0.06em;
+    }
+    .team-pill.empty .pill-logo {
+      border-style: dashed;
+      color: var(--ink-mute);
+    }
+    .team-pill[disabled] { pointer-events: none; }
+
+    /* ===== KPIs ===== */
     .pk-kpis {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     .pk-kpi {
       background: var(--bg-1); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 16px 18px;
+      border-radius: var(--radius); padding: 14px 18px;
       display: flex; flex-direction: column; gap: 6px;
     }
     .pk-kpi .l {
@@ -38,292 +273,21 @@
     }
     .pk-kpi .v {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 28px; line-height: 1; color: var(--ink);
+      font-size: 24px; line-height: 1; color: var(--ink);
     }
     .pk-kpi.accent .v { color: var(--accent); }
     @media (max-width: 900px) { .pk-kpis { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px) { .pk-kpis { grid-template-columns: 1fr; } }
 
-    /* Two-column layout */
-    .pk-layout {
-      display: grid; grid-template-columns: 1fr 340px; gap: 20px;
-      align-items: start;
+    /* ===== Bottom panels ===== */
+    .pk-bottom {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-top: 16px;
     }
-    @media (max-width: 1024px) { .pk-layout { grid-template-columns: 1fr; } }
-
-    /* Stage sections */
-    .pk-stage {
-      background: var(--bg-1); border: 1px solid var(--line);
-      border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
-    }
-    .pk-stage.locked { opacity: 0.95; }
-    .stage-head {
-      display: flex; align-items: center; gap: 12px;
-      flex-wrap: wrap;
-      padding-bottom: 14px; margin-bottom: 16px;
-      border-bottom: 1px solid var(--line);
-    }
-    .stage-head h2 {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase;
-      margin: 0;
-    }
-    .stage-badge-pts {
-      font-family: 'JetBrains Mono', monospace; font-size: 10px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 3px;
-      color: var(--warn); background: rgba(255,154,60,0.12);
-      border: 1px solid rgba(255,154,60,0.3);
-    }
-    .stage-deadline {
-      font-family: 'JetBrains Mono', monospace; font-size: 10px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--ink-mute);
-    }
-    .stage-status {
-      margin-left: auto;
-      font-family: 'JetBrains Mono', monospace; font-size: 10px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--ink-mute);
-    }
-
-    .pick-group { margin-bottom: 16px; }
-    .pick-group:last-child { margin-bottom: 0; }
-    .pick-label {
-      display: block; margin-bottom: 8px;
-      font-family: 'JetBrains Mono', monospace; font-size: 11px;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--ink-dim);
-    }
-    .pick-label .pts {
-      color: var(--accent); margin-left: 4px;
-    }
-
-    /* Locked pick cards (Stage 1 display) */
-    .pick-cards {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-    }
-    .pick-card {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px;
-      background: var(--bg-2); border: 1px solid var(--line);
-      border-radius: var(--radius);
-    }
-    .pick-card .logo {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line-strong);
-      display: grid; place-items: center;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 10px; letter-spacing: 0.04em;
-      overflow: hidden;
-    }
-    .pick-card .logo img,
-    .pick-slot .slot-team-logo img,
-    .chip .chip-logo img {
-      max-width: 75%; max-height: 75%;
-      width: auto; height: auto; object-fit: contain;
-    }
-    .pick-slot .slot-team-logo,
-    .chip .chip-logo { overflow: hidden; }
-    .pick-card .name {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
-      flex: 1;
-    }
-    .pick-card .check {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 18px;
-    }
-    .pick-card.correct {
-      border-color: rgba(46,204,113,0.5);
-      background: rgba(46,204,113,0.06);
-    }
-    .pick-card.correct .check { color: var(--win); }
-    .pick-card.wrong {
-      border-color: rgba(231,76,60,0.5);
-      background: rgba(231,76,60,0.06);
-    }
-    .pick-card.wrong .check { color: var(--loss); }
-
-    /* Active pick selectors (Stage 2 / Playoffs dropdowns) */
-    .pick-select {
-      width: 100%;
-      padding: 12px 14px;
-      background: var(--bg-2); border: 1px solid var(--line-strong);
-      border-radius: var(--radius);
-      color: var(--ink);
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-      font-size: 15px; letter-spacing: 0.04em;
-      cursor: pointer;
-    }
-    .pick-select:focus { border-color: var(--accent); outline: none; }
-    .pick-selects-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    }
-    @media (max-width: 480px) { .pick-selects-row { grid-template-columns: 1fr; } }
-
-    /* Stage 2 — slots + pool */
-    .slot-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    }
-    .pick-slot {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 16px;
-      background: transparent;
-      border: 1px dashed var(--line-strong);
-      border-radius: var(--radius);
-      color: var(--ink-mute);
-      cursor: pointer;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-      text-align: left; width: 100%;
-      min-height: 56px;
-      transition: border-color .15s, background .15s, color .15s;
-    }
-    .pick-slot:hover { border-color: var(--accent); color: var(--ink); }
-    .pick-slot.active {
-      border-color: var(--accent); border-style: solid;
-      background: rgba(76, 201, 255,0.08);
-      color: var(--accent);
-    }
-    .pick-slot.filled {
-      border-style: solid;
-      border-color: var(--line-strong);
-      background: var(--bg-2);
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .pick-slot .slot-empty-icon {
-      width: 28px; height: 28px; border-radius: 50%;
-      border: 1px solid var(--line-strong);
-      display: grid; place-items: center;
-      font-size: 16px; font-family: 'Inter', sans-serif; font-weight: 400;
-      flex-shrink: 0;
-    }
-    .pick-slot .slot-team-logo {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line-strong);
-      display: grid; place-items: center;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 10px; letter-spacing: 0.04em;
-      flex-shrink: 0;
-    }
-    .pick-slot .slot-team-name {
-      flex: 1;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
-    }
-    .pick-slot .slot-remove {
-      color: var(--ink-mute); font-size: 16px;
-      width: 18px; height: 18px;
-      display: grid; place-items: center;
-    }
-
-    .chip-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-    }
-    @media (max-width: 768px) { .chip-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 480px) { .chip-grid { grid-template-columns: repeat(2, 1fr); } }
-    .chip {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 10px;
-      background: var(--bg-2);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-      font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-      color: var(--ink);
-      transition: border-color .15s, background .15s, opacity .15s;
-    }
-    .chip:hover { border-color: var(--accent); }
-    .chip.used {
-      opacity: 0.3; cursor: not-allowed;
-      pointer-events: none;
-    }
-    .chip .chip-logo {
-      width: 22px; height: 22px; border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line);
-      display: grid; place-items: center;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 9px;
-      flex-shrink: 0;
-    }
-    .chip .chip-name {
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    /* Locked slots (Stage 3 preview e Playoffs preview) */
-    .locked-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-    }
-    @media (max-width: 768px) { .locked-row { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .locked-row { grid-template-columns: 1fr; } }
-    .pick-slot.locked {
-      cursor: not-allowed;
-      background: rgba(255,255,255,0.02);
-      border-style: dashed;
-      border-color: var(--line);
-      color: var(--ink-mute);
-    }
-    .pick-slot.locked:hover {
-      border-color: var(--line);
-      color: var(--ink-mute);
-    }
-    .pick-slot.locked.locked-wide { width: 100%; }
-    .pick-slot .lock-icon,
-    .pick-slot .trophy-icon {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line);
-      display: grid; place-items: center;
-      flex-shrink: 0;
-      color: var(--ink-mute);
-    }
-
-    /* Top-8 grid (Stage 3 checkboxes) */
-    .top8-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-    }
-    @media (max-width: 768px) { .top8-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 480px) { .top8-grid { grid-template-columns: repeat(2, 1fr); } }
-    .top8-cell input { display: none; }
-    .top8-cell label {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px;
-      background: var(--bg-2); border: 1px solid var(--line);
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: border-color .15s, background .15s;
-    }
-    .top8-cell label:hover { border-color: var(--line-strong); }
-    .top8-cell input:checked + label {
-      border-color: var(--accent);
-      background: rgba(76, 201, 255,0.08);
-    }
-    .top8-cell .logo {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line-strong);
-      display: grid; place-items: center;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 9px;
-    }
-    .top8-cell .name {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-      font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-    }
-
-    /* Sidebar */
-    .pk-side { position: sticky; top: 16px; }
+    @media (max-width: 800px) { .pk-bottom { grid-template-columns: 1fr; } }
     .pk-leaderboard, .pk-scoring {
       background: var(--bg-1); border: 1px solid var(--line);
       border-radius: var(--radius); padding: 18px;
-      margin-bottom: 16px;
     }
     .lb-head, .sc-head {
       display: flex; align-items: center; gap: 10px;
@@ -377,9 +341,6 @@
       font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
       font-size: 16px; color: var(--ink);
     }
-    .lb-row .pts .me-label { display:none; }
-
-    /* Scoring card */
     .sc-list { list-style: none; padding: 0; margin: 0; }
     .sc-list li {
       display: flex; justify-content: space-between; align-items: center;
@@ -396,11 +357,10 @@
       font-size: 16px; color: var(--accent);
     }
 
-    /* Sticky bottom action bar */
     .pk-actionbar {
       position: sticky; bottom: 0;
       margin-top: 16px;
-      padding: 14px 20px;
+      padding: 12px 20px;
       background: var(--bg-1);
       border: 1px solid var(--line-strong);
       border-radius: var(--radius);
@@ -409,14 +369,12 @@
       z-index: 50;
       box-shadow: 0 -8px 24px rgba(0,0,0,0.35);
     }
-    .actionbar-info {
+    .pk-actionbar .info {
       font-family: 'JetBrains Mono', monospace; font-size: 12px;
       color: var(--ink-dim); letter-spacing: 0.06em;
     }
-    .actionbar-info strong { color: var(--ink); }
-    .actionbar-btns { margin-left: auto; display: flex; gap: 10px; }
-
-    /* Saved message */
+    .pk-actionbar .info strong { color: var(--ink); }
+    .pk-actionbar .actions { margin-left: auto; }
     .pk-saved-msg {
       margin-top: 12px; padding: 10px 14px;
       background: rgba(46,204,113,0.1);
@@ -434,196 +392,253 @@
   <header class="page-head">
     <div class="page-head-inner">
       <div class="crumbs"><a href="index.html">Major Hub</a><span class="sep">/</span><span>Pick'em</span></div>
-      <h1 class="page-title"><span class="accent">Pick'em</span><br>Challenge</h1>
-      <p class="page-sub">Faça suas previsões para cada stage e dispute pontos no ranking. Picks travam quando cada stage começa.</p>
+      <h1 class="page-title"><span class="accent">Pick'em</span><br>Simulator</h1>
+      <p class="page-sub">Simule o caminho dos 16 times do Stage 1 do IEM Cologne Major 2026. Escolha os vencedores e veja as chaves Swiss se formarem até os 8 qualificados para o Main Event.</p>
     </div>
   </header>
 
   <main>
     <section class="block">
 
-      <!-- Auth gate -->
       <section id="aviso-login" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         <h2>Login necessário</h2>
-        <p>Você precisa estar logado para participar do Pick'em Challenge.</p>
+        <p>Você precisa estar logado para participar do Pick'em Simulator.</p>
         <div class="auth-btns">
           <a href="login.html" class="btn primary">Entrar</a>
           <a href="cadastro.html" class="btn ghost">Criar conta</a>
         </div>
       </section>
 
-      <!-- Pick'em area -->
       <div id="form-pickem-area" hidden>
 
-        <!-- 4 KPIs -->
+        <!-- 4 status cards -->
+        <div class="status-cards">
+          <div class="status-card" id="status-card-1">
+            <div class="status-meta">STAGE 1 · ROUND 1</div>
+            <div class="status-title">OPENING</div>
+            <div class="status-state">EM ANDAMENTO</div>
+          </div>
+          <div class="status-card" id="status-card-2">
+            <div class="status-meta">STAGE 2 · ROUNDS 2 &amp; 3</div>
+            <div class="status-title">SWISS</div>
+            <div class="status-state">BLOQUEADO</div>
+          </div>
+          <div class="status-card" id="status-card-3">
+            <div class="status-meta">STAGE 3 · ROUNDS 4 &amp; 5</div>
+            <div class="status-title">DECISÃO</div>
+            <div class="status-state">BLOQUEADO</div>
+          </div>
+          <div class="status-card soon" id="status-card-playoffs">
+            <div class="status-meta">PLAYOFFS</div>
+            <div class="status-title">MAIN EVENT</div>
+            <div class="status-state">EM BREVE</div>
+          </div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+          <div class="action-left">
+            <button type="button" class="btn-action btn-reset-all" id="btn-sim-reset">Resetar tudo</button>
+            <button type="button" class="btn-action" id="btn-random-stage">
+              <span class="x-icon" aria-hidden="true">×</span>
+              <span>Random stage <span id="random-stage-num">1</span></span>
+            </button>
+          </div>
+          <div class="action-right">
+            Picks: <b id="ab-picks-count">0</b> / 33 · Qualificados: <b id="ab-quali">0</b> / 8
+          </div>
+        </div>
+
+        <!-- Simulator grid -->
+        <div class="sim-wrap">
+          <div class="sim-grid">
+
+            <!-- Col 1 — Stage 1 (0-0) -->
+            <div class="sim-col">
+              <div class="sim-bucket" data-bucket="00">
+                <div class="bucket-head">
+                  <span class="bucket-label">0 — 0</span>
+                  <span class="bucket-count">8 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-00"></div>
+              </div>
+            </div>
+
+            <!-- Col 2 — Stage 2 (1-0 + 0-1 empilhados) -->
+            <div class="sim-col">
+              <div class="sim-bucket" data-bucket="10">
+                <div class="bucket-head">
+                  <span class="bucket-label">1 — 0</span>
+                  <span class="bucket-count">4 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-10"></div>
+              </div>
+              <div class="sim-bucket" data-bucket="01">
+                <div class="bucket-head">
+                  <span class="bucket-label">0 — 1</span>
+                  <span class="bucket-count">4 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-01"></div>
+              </div>
+            </div>
+
+            <!-- Col 3 — Stage 3 round 4 (2-0, 1-1, 0-2) -->
+            <div class="sim-col">
+              <div class="sim-bucket" data-bucket="20">
+                <div class="bucket-head">
+                  <span class="bucket-label">2 — 0</span>
+                  <span class="bucket-count">2 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-20"></div>
+              </div>
+              <div class="sim-bucket" data-bucket="11">
+                <div class="bucket-head">
+                  <span class="bucket-label">1 — 1</span>
+                  <span class="bucket-count">4 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-11"></div>
+              </div>
+              <div class="sim-bucket" data-bucket="02">
+                <div class="bucket-head">
+                  <span class="bucket-label">0 — 2</span>
+                  <span class="bucket-count">2 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-02"></div>
+              </div>
+            </div>
+
+            <!-- Col 4 — Stage 3 round 5 (3-0, 2-1, 1-2, 0-3) -->
+            <div class="sim-col">
+              <div class="sim-bucket qualified" data-card="30">
+                <div class="bucket-head">
+                  <span class="bucket-label">3 — 0</span>
+                  <span class="bucket-count">Classificado</span>
+                </div>
+                <div class="card-slots" id="card-30"></div>
+              </div>
+              <div class="sim-bucket" data-bucket="21">
+                <div class="bucket-head">
+                  <span class="bucket-label">2 — 1</span>
+                  <span class="bucket-count">3 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-21"></div>
+              </div>
+              <div class="sim-bucket" data-bucket="12">
+                <div class="bucket-head">
+                  <span class="bucket-label">1 — 2</span>
+                  <span class="bucket-count">3 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-12"></div>
+              </div>
+              <div class="sim-bucket eliminated" data-card="03">
+                <div class="bucket-head">
+                  <span class="bucket-label">0 — 3</span>
+                  <span class="bucket-count">Eliminado</span>
+                </div>
+                <div class="card-slots" id="card-03"></div>
+              </div>
+            </div>
+
+            <!-- Col 5 — Stage 3 final (3-1+3-2, 2-2, 1-3+2-3) -->
+            <div class="sim-col">
+              <div class="sim-bucket qualified">
+                <div class="card-section">
+                  <div class="bucket-head">
+                    <span class="bucket-label">3 — 1</span>
+                    <span class="bucket-count">Classificado</span>
+                  </div>
+                  <div class="card-slots" id="card-31"></div>
+                </div>
+                <div class="card-section">
+                  <div class="bucket-head">
+                    <span class="bucket-label">3 — 2</span>
+                    <span class="bucket-count">Classificado</span>
+                  </div>
+                  <div class="card-slots" id="card-32"></div>
+                </div>
+              </div>
+              <div class="sim-bucket" data-bucket="22">
+                <div class="bucket-head">
+                  <span class="bucket-label">2 — 2</span>
+                  <span class="bucket-count">3 jogos</span>
+                </div>
+                <div class="bucket-body" id="bucket-22"></div>
+              </div>
+              <div class="sim-bucket eliminated">
+                <div class="card-section">
+                  <div class="bucket-head">
+                    <span class="bucket-label">1 — 3</span>
+                    <span class="bucket-count">Eliminado</span>
+                  </div>
+                  <div class="card-slots" id="card-13"></div>
+                </div>
+                <div class="card-section">
+                  <div class="bucket-head">
+                    <span class="bucket-label">2 — 3</span>
+                    <span class="bucket-count">Eliminado</span>
+                  </div>
+                  <div class="card-slots" id="card-23"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- KPIs detalhados (mantém visão geral) -->
         <div class="pk-kpis">
           <div class="pk-kpi accent">
-            <span class="l">Sua pontuação</span>
-            <span class="v" id="kpi-pontos">0 pts</span>
+            <span class="l">Picks totais</span>
+            <span class="v" id="kpi-picks">0 / 33</span>
           </div>
           <div class="pk-kpi">
-            <span class="l">Ranking global</span>
-            <span class="v" id="kpi-rank">—</span>
+            <span class="l">Stage atual</span>
+            <span class="v" id="kpi-stage">Stage 1</span>
           </div>
           <div class="pk-kpi">
-            <span class="l">Picks corretos</span>
-            <span class="v" id="kpi-corretos">3 / 12</span>
+            <span class="l">Classificados</span>
+            <span class="v" id="kpi-quali">0 / 8</span>
           </div>
           <div class="pk-kpi">
-            <span class="l">Próximo prazo</span>
-            <span class="v" id="kpi-prazo">11h 23m</span>
+            <span class="l">Eliminados</span>
+            <span class="v" id="kpi-elim">0 / 8</span>
           </div>
         </div>
 
-        <div class="pk-layout">
-
-          <!-- LEFT: stages -->
-          <form id="form-pickem" class="pk-stages">
-
-            <!-- Stage 1 — locked, sample picks -->
-            <section class="pk-stage locked" data-stage="stage1">
-              <div class="stage-head">
-                <h2>Stage 1 · Swiss</h2>
-                <span class="stage-badge-pts">Locked · 20 pts</span>
-                <span class="stage-status">Picks finalizados</span>
+        <div class="pk-bottom">
+          <div class="pk-leaderboard">
+            <div class="lb-head">
+              <h2>Leaderboard</h2>
+              <div class="lb-tabs">
+                <button class="lb-tab active" type="button" data-tab="global">Global</button>
+                <button class="lb-tab" type="button" data-tab="amigos">Amigos</button>
               </div>
-              <div class="pick-group">
-                <span class="pick-label">3 — 0 (qualificados rápidos) <span class="pts">· 8 pts cada</span></span>
-                <div class="pick-cards">
-                  <div class="pick-card correct"><span class="logo"><img src="assets/img/vitality.png" alt="Team Vitality"></span><span class="name">Vitality</span><span class="check">✓</span></div>
-                  <div class="pick-card correct"><span class="logo"><img src="assets/img/navi.png" alt="Natus Vincere"></span><span class="name">NAVI</span><span class="check">✓</span></div>
-                </div>
-              </div>
-              <div class="pick-group">
-                <span class="pick-label">0 — 3 (eliminados rápidos) <span class="pts">· 4 pts cada</span></span>
-                <div class="pick-cards">
-                  <div class="pick-card wrong"><span class="logo"><img src="assets/img/m80.png" alt="M80"></span><span class="name">M80</span><span class="check">✗</span></div>
-                  <div class="pick-card correct"><span class="logo"><img src="assets/img/furia.png" alt="FURIA"></span><span class="name">FURIA</span><span class="check">✓</span></div>
-                </div>
-              </div>
-            </section>
-
-            <!-- Stage 2 — open (slots + pool) -->
-            <section class="pk-stage" data-stage="stage2">
-              <div class="stage-head">
-                <h2>Stage 2 · Swiss</h2>
-                <span class="stage-badge-pts" style="color:var(--accent-2);background:rgba(76,201,255,0.12);border-color:rgba(76,201,255,0.3);">Open · <span id="badge-stage2">0/4</span></span>
-                <span class="stage-status">Fecha 06 Jun · 14:00 CET</span>
-              </div>
-
-              <div class="pick-group">
-                <span class="pick-label">3 — 0 (2 picks <span class="pts">· 8 pts cada</span>)</span>
-                <div class="slot-row">
-                  <button type="button" class="pick-slot" data-cat="30" data-slot="0"></button>
-                  <button type="button" class="pick-slot" data-cat="30" data-slot="1"></button>
-                </div>
-              </div>
-              <div class="pick-group">
-                <span class="pick-label">0 — 3 (2 picks <span class="pts">· 4 pts cada</span>)</span>
-                <div class="slot-row">
-                  <button type="button" class="pick-slot" data-cat="03" data-slot="0"></button>
-                  <button type="button" class="pick-slot" data-cat="03" data-slot="1"></button>
-                </div>
-              </div>
-              <div class="pick-group">
-                <span class="pick-label">Times disponíveis · clique para escolher</span>
-                <div class="chip-grid" id="stage2-chips"></div>
-              </div>
-            </section>
-
-            <!-- Stage 3 — bloqueado (preview) -->
-            <section class="pk-stage" data-stage="stage3">
-              <div class="stage-head">
-                <h2>Stage 3 · Swiss</h2>
-                <span class="stage-badge-pts" style="color:var(--accent-2);background:rgba(76,201,255,0.12);border-color:rgba(76,201,255,0.3);">Disponível em 7 dias</span>
-                <span class="stage-status">Fecha 11 Jun · 14:00 CET</span>
-              </div>
-              <div class="locked-row">
-                <div class="pick-slot locked" aria-disabled="true">
-                  <span class="lock-icon" aria-hidden="true">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  </span>
-                  <span>Bloqueado</span>
-                </div>
-                <div class="pick-slot locked" aria-disabled="true">
-                  <span class="lock-icon" aria-hidden="true">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  </span>
-                  <span>Bloqueado</span>
-                </div>
-                <div class="pick-slot locked" aria-disabled="true">
-                  <span class="lock-icon" aria-hidden="true">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  </span>
-                  <span>Bloqueado</span>
-                </div>
-                <div class="pick-slot locked" aria-disabled="true">
-                  <span class="lock-icon" aria-hidden="true">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  </span>
-                  <span>Bloqueado</span>
-                </div>
-              </div>
-            </section>
-
-            <!-- Playoffs — bloqueado (preview) -->
-            <section class="pk-stage" data-stage="playoffs">
-              <div class="stage-head">
-                <h2>Playoffs</h2>
-                <span class="stage-badge-pts" style="color:var(--accent-2);background:rgba(76,201,255,0.12);border-color:rgba(76,201,255,0.3);">Disponível em 14 dias</span>
-                <span class="stage-status">Champion: até 40 pts</span>
-              </div>
-              <div class="pick-group">
-                <span class="pick-label">Pick do campeão</span>
-                <div class="pick-slot locked locked-wide" aria-disabled="true">
-                  <span class="trophy-icon" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21L7 19"/><path d="M14 14.66V17c0 .55.47.98.97 1.21L17 19"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-                  </span>
-                  <span>Bloqueado até 18 Jun</span>
-                </div>
-              </div>
-            </section>
-
-            <div class="pk-saved-msg" id="pk-saved-msg" hidden></div>
-          </form>
-
-          <!-- RIGHT: leaderboard + scoring -->
-          <aside class="pk-side">
-
-            <div class="pk-leaderboard">
-              <div class="lb-head">
-                <h2>Leaderboard</h2>
-                <div class="lb-tabs">
-                  <button class="lb-tab active" type="button" data-tab="global">Global</button>
-                  <button class="lb-tab" type="button" data-tab="amigos">Amigos</button>
-                </div>
-              </div>
-              <ol class="lb-list" id="lb-list"></ol>
             </div>
-
-            <div class="pk-scoring">
-              <div class="sc-head">
-                <h3>Como pontuar</h3>
-              </div>
-              <ul class="sc-list">
-                <li><span class="rule">Pick de 3 — 0</span><span class="pts">8 pts</span></li>
-                <li><span class="rule">Pick de 0 — 3</span><span class="pts">4 pts</span></li>
-                <li><span class="rule">Top 8 (Stage 3)</span><span class="pts">2 pts cada</span></li>
-                <li><span class="rule">Campeão correto</span><span class="pts">40 pts</span></li>
-              </ul>
+            <ol class="lb-list" id="lb-list"></ol>
+          </div>
+          <div class="pk-scoring">
+            <div class="sc-head">
+              <h3>Como pontuar</h3>
             </div>
-          </aside>
+            <ul class="sc-list">
+              <li><span class="rule">Acertar time 3 — 0</span><span class="pts">8 pts</span></li>
+              <li><span class="rule">Acertar time 3 — 1</span><span class="pts">5 pts</span></li>
+              <li><span class="rule">Acertar time 3 — 2</span><span class="pts">3 pts</span></li>
+              <li><span class="rule">Acertar time 0 — 3</span><span class="pts">4 pts</span></li>
+              <li><span class="rule">Top 8 classificado</span><span class="pts">2 pts cada</span></li>
+            </ul>
+          </div>
         </div>
 
-        <!-- Sticky bottom bar -->
+        <div class="pk-saved-msg" id="pk-saved-msg" hidden></div>
+
         <div class="pk-actionbar">
-          <span class="actionbar-info">
-            <strong>Stage 2:</strong> <span id="ab-count">0 / 4</span> picks · 12h restantes
+          <span class="info">
+            <strong>Picks:</strong> <span id="ab-count">0 / 33</span>
           </span>
-          <div class="actionbar-btns">
-            <button type="button" id="btn-resetar" class="btn ghost">Resetar</button>
-            <button type="submit" form="form-pickem" id="btn-salvar" class="btn primary">Salvar picks</button>
+          <div class="actions">
+            <button type="button" id="btn-salvar" class="btn primary">Salvar picks</button>
           </div>
         </div>
       </div>
@@ -633,7 +648,7 @@
 
   <div id="site-foot"></div>
   <script src="js/site.js?v=5"></script>
-  <script src="js/pickem.js?v=5"></script>
+  <script src="js/pickem.js?v=9"></script>
   <script src="js/auth.js?v=5"></script>
 </body>
 </html>
