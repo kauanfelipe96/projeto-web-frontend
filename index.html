@@ -22,6 +22,30 @@
       <h1 class="hero-title">IEM Cologne<br>Major <span class="accent">2026</span></h1>
       <p class="hero-sub">A Catedral do Counter-Strike retorna a Colônia. 32 times. 20 dias. Um campeão.</p>
 
+      <div class="countdown" id="countdown" aria-live="polite">
+        <span class="countdown-label">Faltam</span>
+        <div class="cd-unit accent">
+          <span class="cd-num" id="cd-days">--</span>
+          <span class="cd-name">Dias</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-hours">--</span>
+          <span class="cd-name">Horas</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-mins">--</span>
+          <span class="cd-name">Min</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-unit">
+          <span class="cd-num" id="cd-secs">--</span>
+          <span class="cd-name">Seg</span>
+        </div>
+        <span class="cd-target" id="cd-target">para 02 Jun · 14:00 CEST</span>
+      </div>
+
       <div class="stats">
         <div class="stat">
           <span class="label">Prize pool</span>
@@ -64,12 +88,12 @@
     <div class="sponsors-inner">
       <div class="sponsors-label">Powered by</div>
       <div class="sponsors-list">
-        <span class="sponsor-tag">INTEL</span>
-        <span class="sponsor-tag">ESL</span>
-        <span class="sponsor-tag">DHL</span>
-        <span class="sponsor-tag">RED BULL</span>
-        <span class="sponsor-tag">MONSTER</span>
-        <span class="sponsor-tag">PRIME</span>
+        <span class="sponsor-tag"><img src="assets/img/intel.svg" alt="Intel"></span>
+        <span class="sponsor-tag"><img src="assets/img/esl.svg" alt="ESL"></span>
+        <span class="sponsor-tag"><img src="assets/img/dhl.svg" alt="DHL"></span>
+        <span class="sponsor-tag"><img src="assets/img/redbull.svg" alt="Red Bull"></span>
+        <span class="sponsor-tag"><img src="assets/img/monster.webp" alt="Monster Energy"></span>
+        <span class="sponsor-tag"><img src="assets/img/prime.svg" alt="Prime Video"></span>
       </div>
     </div>
   </div>
@@ -247,5 +271,32 @@
   <div id="site-foot"></div>
   <script src="js/site.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+  (function(){
+    var target = new Date('2026-06-02T14:00:00+02:00').getTime();
+    var dEl = document.getElementById('cd-days'),
+        hEl = document.getElementById('cd-hours'),
+        mEl = document.getElementById('cd-mins'),
+        sEl = document.getElementById('cd-secs'),
+        rootEl = document.getElementById('countdown');
+    if (!dEl || !rootEl) return;
+    function pad(n){ return n < 10 ? '0' + n : '' + n; }
+    function tick(){
+      var diff = target - Date.now();
+      if (diff <= 0) {
+        dEl.textContent = '00'; hEl.textContent = '00';
+        mEl.textContent = '00'; sEl.textContent = '00';
+        rootEl.classList.add('live');
+        return;
+      }
+      dEl.textContent = pad(Math.floor(diff / 86400000));
+      hEl.textContent = pad(Math.floor(diff / 3600000) % 24);
+      mEl.textContent = pad(Math.floor(diff / 60000) % 60);
+      sEl.textContent = pad(Math.floor(diff / 1000) % 60);
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+  </script>
 </body>
 </html>
