@@ -194,61 +194,49 @@
       border-top: 1px dashed rgba(255,255,255,0.12);
     }
 
-    /* ===== Match rows + Team pills ===== */
+    /* ===== Match rows + Team pills (só logo, circular) ===== */
     .match-row {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      padding: 3px 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px;
+      padding: 6px 0;
+    }
+    .match-row + .match-row { border-top: 1px solid var(--line); }
+    .match-vs {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.12em;
+      color: var(--ink-mute);
+      flex-shrink: 0;
     }
     .card-slots {
-      display: flex; flex-direction: column; gap: 6px;
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; padding: 4px 0;
     }
     .team-pill {
-      display: inline-flex; align-items: center;
-      width: 100%;
-      padding: 5px 10px 5px 5px;
+      display: inline-grid; place-items: center;
+      width: 42px; height: 42px;
+      padding: 0;
       background: rgba(0,0,0,0.25);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      gap: 8px;
-      cursor: pointer;
-      min-width: 0;
-      transition: border-color .15s, background .15s, opacity .15s, box-shadow .15s;
-    }
-    .team-pill:hover { border-color: var(--accent); }
-    .team-pill .pill-logo {
-      width: 28px; height: 28px;
-      border-radius: 50%;
       border: 1px solid var(--line-strong);
-      background: rgba(255,255,255,0.04);
-      display: grid; place-items: center;
-      flex-shrink: 0;
+      border-radius: 50%;
+      cursor: pointer;
       overflow: hidden;
+      flex-shrink: 0;
       color: var(--ink-mute);
       font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 11px;
+      font-size: 13px;
+      transition: border-color .15s, background .15s, opacity .15s, box-shadow .15s, filter .15s;
     }
-    .team-pill .pill-logo img {
+    .team-pill img {
       max-width: 75%; max-height: 75%;
       width: auto; height: auto; object-fit: contain;
     }
-    .team-pill .pill-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700; font-size: 12px;
-      letter-spacing: 0.04em; text-transform: uppercase;
-      color: var(--ink);
-      flex: 1;
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .team-pill:hover:not([disabled]) { border-color: var(--accent); }
     .team-pill.winner {
       border-color: var(--accent);
       background: rgba(76, 201, 255, 0.10);
-      box-shadow: 0 0 0 1px var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 10px rgba(76,201,255,0.30);
     }
-    .team-pill.loser { opacity: 0.35; }
+    .team-pill.loser { opacity: 0.35; filter: grayscale(1); }
     .team-pill.locked-team {
       filter: grayscale(1) brightness(0.55);
       cursor: not-allowed;
@@ -257,16 +245,6 @@
       cursor: not-allowed;
       background: rgba(0,0,0,0.15);
       border-style: dashed;
-    }
-    .team-pill.empty .pill-name {
-      color: var(--ink-mute);
-      font-weight: 600;
-      font-style: italic;
-      letter-spacing: 0.06em;
-    }
-    .team-pill.empty .pill-logo {
-      border-style: dashed;
-      color: var(--ink-mute);
     }
     .team-pill[disabled] { pointer-events: none; }
 
@@ -645,8 +623,6 @@
           </div>
         </div>
 
-        <div class="pk-saved-msg" id="pk-saved-msg" hidden></div>
-
         <div class="pk-actionbar">
           <span class="info">
             <strong>Picks:</strong> <span id="ab-count">0 / 33</span>
@@ -661,8 +637,8 @@
   </main>
 
   <div id="site-foot"></div>
-  <script src="js/site.js?v=5"></script>
-  <script src="js/pickem.js?v=10"></script>
+  <script src="js/site.js?v=6"></script>
+  <script src="js/pickem.js?v=11"></script>
   <script src="js/auth.js?v=5"></script>
 </body>
 </html>

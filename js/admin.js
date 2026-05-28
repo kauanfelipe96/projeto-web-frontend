@@ -168,20 +168,22 @@ function cadastrarUsuario(e) {
 }
 
 function excluirUsuario(id, li) {
-    if (!confirm('Excluir este usuário?')) return;
-    salvarUsuarios(lerUsuarios().filter(function (u) { return u.id !== id; }));
-    li.parentNode.removeChild(li);
-    atualizarKPIs();
+    Toast.confirm('Excluir este usuário?', function () {
+        salvarUsuarios(lerUsuarios().filter(function (u) { return u.id !== id; }));
+        if (li && li.parentNode) li.parentNode.removeChild(li);
+        atualizarKPIs();
+        Toast.show('Usuário excluído.', 'success', 2200);
+    });
 }
 
 function limparTodos() {
-    if (!confirm('Excluir todos os usuários cadastrados?')) return;
-    localStorage.removeItem(CHAVE);
-    var lista = document.getElementById('lista-usuarios');
-    while (lista.firstChild) {
-        lista.removeChild(lista.firstChild);
-    }
-    atualizarKPIs();
+    Toast.confirm('Excluir todos os usuários cadastrados?', function () {
+        localStorage.removeItem(CHAVE);
+        var lista = document.getElementById('lista-usuarios');
+        while (lista.firstChild) lista.removeChild(lista.firstChild);
+        atualizarKPIs();
+        Toast.show('Todos os usuários foram removidos.', 'success', 2200);
+    });
 }
 
 function pesquisar() {
@@ -197,11 +199,17 @@ function limparFormulario() {
 }
 
 function carregarDadosExemplo() {
-    if (lerUsuarios().length > 0 &&
-        !confirm('Isso vai substituir os dados atuais por usuários de exemplo. Continuar?')) {
+    if (lerUsuarios().length > 0) {
+        Toast.confirm(
+            'Isso vai substituir os dados atuais por usuários de exemplo. Continuar?',
+            function () { _seedDadosExemplo(); }
+        );
         return;
     }
+    _seedDadosExemplo();
+}
 
+function _seedDadosExemplo() {
     var EXEMPLOS = [
         { nome: 'Ana Beatriz Souza',     nick: 'zywoo_GOAT',  time: 'FURIA',            pontuacao: 96 },
         { nome: 'Bruno Carvalho',        nick: 's1mple_fan',  time: 'Team Vitality',    pontuacao: 92 },
@@ -260,7 +268,7 @@ function carregarDadosExemplo() {
 
     renderizarLista();
     atualizarKPIs();
-    alert('Dados de exemplo carregados: ' + usuarios.length + ' usuários, ' + previsoes.length + ' com Pick\'em salvo.');
+    Toast.show('Dados de exemplo carregados: ' + usuarios.length + ' usuários, ' + previsoes.length + ' com Pick\'em salvo.', 'success', 3500);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

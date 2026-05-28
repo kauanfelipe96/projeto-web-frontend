@@ -7,11 +7,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    document.querySelector('form').addEventListener('submit', function (e) {
+    var form = document.querySelector('form');
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
+        formError.clearAll(form);
 
         var email = document.getElementById('email').value.trim();
         var senha = document.getElementById('senha').value;
+
+        var hasError = false;
+        if (!email) { formError.show('email', 'Informe seu e-mail.'); hasError = true; }
+        if (!senha) { formError.show('senha', 'Informe sua senha.'); hasError = true; }
+        if (hasError) return;
 
         var usuarios = JSON.parse(localStorage.getItem(CHAVE)) || [];
         var usuario  = usuarios.find(function (u) {
@@ -19,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (!usuario) {
-            alert('E-mail ou senha incorretos.');
+            formError.show('email', 'E-mail ou senha incorretos.');
+            formError.show('senha', 'Verifique suas credenciais.');
             return;
         }
 

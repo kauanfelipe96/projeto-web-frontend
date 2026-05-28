@@ -240,19 +240,17 @@ function currentStageNum() {
   return 0;
 }
 
-/* ===== Pills (renderização) ===== */
+/* ===== Pills (só logo, circular) ===== */
 function makeTeamPill(team, opts) {
   opts = opts || {};
   var cls = ['team-pill'];
-  var logoHTML, nameHTML;
+  var content;
 
   if (!team) {
     cls.push('empty');
-    logoHTML = '<span class="pill-logo">?</span>';
-    nameHTML = '<span class="pill-name">Aguardando</span>';
+    content = '?';
   } else {
-    logoHTML = '<span class="pill-logo">' + logoImg(team) + '</span>';
-    nameHTML = '<span class="pill-name">' + teamAbbrev(team) + '</span>';
+    content = logoImg(team);
     if (opts.locked)        cls.push('locked-team');
     else if (opts.isWinner) cls.push('winner');
     else if (opts.isLoser)  cls.push('loser');
@@ -261,10 +259,17 @@ function makeTeamPill(team, opts) {
   var attrs = '';
   if (opts.pickKey)              attrs += ' data-pick-key="' + opts.pickKey + '"';
   if (opts.matchIdx !== undefined) attrs += ' data-match-idx="' + opts.matchIdx + '"';
-  if (team)                      attrs += ' data-team="' + team.replace(/"/g, '&quot;') + '"';
+  if (team) {
+    var safe = team.replace(/"/g, '&quot;');
+    attrs += ' data-team="' + safe + '"';
+    attrs += ' title="' + safe + '"';
+    attrs += ' aria-label="' + safe + '"';
+  } else {
+    attrs += ' title="Aguardando" aria-label="Aguardando"';
+  }
   if (opts.locked || !team || opts.display) attrs += ' disabled';
 
-  return '<button type="button" class="' + cls.join(' ') + '"' + attrs + '>' + logoHTML + nameHTML + '</button>';
+  return '<button type="button" class="' + cls.join(' ') + '"' + attrs + '>' + content + '</button>';
 }
 
 function renderBucketMatches(elId, count, getMatch, picks, pickKey, locked) {
@@ -286,7 +291,7 @@ function renderBucketMatches(elId, count, getMatch, picks, pickKey, locked) {
       isLoser:  winner && winner === m[0],
       locked:   locked
     });
-    html += '<div class="match-row">' + pillA + pillB + '</div>';
+    html += '<div class="match-row">' + pillA + '<span class="match-vs">VS</span>' + pillB + '</div>';
   }
   el.innerHTML = html;
 }
@@ -515,28 +520,25 @@ function loadIntoState(p) {
 }
 function salvarPicks() {
   var usuario = JSON.parse(sessionStorage.getItem(CHAVE_SESSAO) || 'null');
-  if (!usuario) return;
+  if (!usuario) { Toast.show('Faça login para salvar os picks.', 'error'); return; }
   var picks = snapshotState();
   picks.email = usuario.email;
   picks.dataSalvo = new Date().toLocaleString('pt-BR');
   var todas = lerPrevisoes().filter(function (p) { return p.email !== usuario.email; });
   todas.push(picks);
   salvarPrevisoes(todas);
-  var msg = document.getElementById('pk-saved-msg');
-  if (msg) {
-    msg.hidden = false;
-    msg.textContent = '✓ Picks salvos com sucesso em ' + picks.dataSalvo;
-    setTimeout(function () { msg.hidden = true; }, 4000);
-  }
+  Toast.show('Picks salvos em ' + picks.dataSalvo, 'success');
 }
 function resetarTudo() {
-  if (!confirm('Resetar todos os picks?')) return;
-  state.s1.fill(null);
-  state.s2_10.fill(null); state.s2_01.fill(null);
-  state.s3_20.fill(null); state.s3_11.fill(null); state.s3_02.fill(null);
-  state.s3_21.fill(null); state.s3_12.fill(null);
-  state.s3_22.fill(null);
-  renderAll();
+  Toast.confirm('Resetar todos os picks?', function () {
+    state.s1.fill(null);
+    state.s2_10.fill(null); state.s2_01.fill(null);
+    state.s3_20.fill(null); state.s3_11.fill(null); state.s3_02.fill(null);
+    state.s3_21.fill(null); state.s3_12.fill(null);
+    state.s3_22.fill(null);
+    renderAll();
+    Toast.show('Picks resetados.', 'success', 2200);
+  });
 }
 
 /* ===== Leaderboard ===== */
