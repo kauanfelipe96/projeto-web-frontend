@@ -82,10 +82,10 @@
 
     /* ===== Top action bar ===== */
     .action-bar {
-      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
       margin-bottom: 16px;
     }
-    .action-left { display: flex; gap: 10px; }
+    .action-left { display: flex; gap: 8px; }
     .action-right {
       margin-left: auto;
       font-family: 'JetBrains Mono', monospace;
@@ -98,28 +98,10 @@
       letter-spacing: 0.04em;
       margin: 0 4px;
     }
-    .btn-action {
-      padding: 10px 18px;
-      background: transparent;
-      border: 1px solid var(--line-strong);
-      border-radius: var(--radius);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800; font-size: 13px;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--ink);
-      cursor: pointer;
-      display: inline-flex; align-items: center; gap: 6px;
+    .action-left .btn[disabled] {
+      opacity: 0.4; cursor: not-allowed; pointer-events: none;
     }
-    .btn-action.btn-reset-all {
-      color: var(--accent);
-      border-color: rgba(76, 201, 255, 0.5);
-    }
-    .btn-action:hover { border-color: var(--accent); }
-    .btn-action[disabled] {
-      opacity: 0.4; cursor: not-allowed;
-    }
-    .btn-action[disabled]:hover { border-color: var(--line-strong); }
-    .btn-action .x-icon { font-size: 16px; line-height: 1; }
+    .action-left .btn .x-icon { font-size: 15px; line-height: 1; }
 
     /* ===== Simulator grid ===== */
     .sim-wrap {
@@ -431,8 +413,8 @@
         <!-- Action bar -->
         <div class="action-bar">
           <div class="action-left">
-            <button type="button" class="btn-action btn-reset-all" id="btn-sim-reset">Resetar tudo</button>
-            <button type="button" class="btn-action" id="btn-random-stage">
+            <button type="button" class="btn ghost" id="btn-sim-reset">Resetar tudo</button>
+            <button type="button" class="btn" id="btn-random-stage">
               <span class="x-icon" aria-hidden="true">×</span>
               <span>Random stage <span id="random-stage-num">1</span></span>
             </button>
@@ -638,7 +620,7 @@
 
   <div id="site-foot"></div>
   <script src="js/site.js?v=6"></script>
-  <script src="js/pickem.js?v=11"></script>
+  <script src="js/pickem.js?v=12"></script>
   <script src="js/auth.js?v=5"></script>
 </body>
 </html>
