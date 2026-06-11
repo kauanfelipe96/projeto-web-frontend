@@ -26,7 +26,8 @@ projeto-web-frontend/
 ├── login.html           # Login do participante
 ├── admin.html           # Control Panel — CRUD + KPIs com sparklines + painel de matches
 ├── css/
-│   └── style.css        # Estilos globais (paleta, tipografia e componentes)
+│   ├── style.css        # Estilos globais (paleta, tipografia e componentes)
+│   └── admin.css        # Estilos exclusivos do Control Panel (admin.html)
 ├── js/
 │   ├── site.js          # Nav e footer compartilhados em todas as páginas (drawer mobile)
 │   ├── auth.js          # Detecta sessão ativa e troca o CTA de login pelo nome do usuário
@@ -45,7 +46,7 @@ projeto-web-frontend/
 
 | Página | Descrição |
 |---|---|
-| `index.html` | Overview do Major: hero com contagem regressiva, key facts (premiação, formato, sede), partidas em destaque com indicador live e cards dos 8 times do Legends Stage |
+| `index.html` | Overview do Major: hero com badges do evento e timeline de stages, key facts (premiação, formato, sede), partidas em destaque com indicador live e cards dos 8 times do Legends Stage |
 | `matches.html` | Calendário em 5 day-groups — Stage 1 R1 (06 Jun · 8 matches com 2 LIVE), Stage 1 R2 (07 Jun), Stage 2 Challengers (09 Jun), Stage 3 Legends (14 Jun com 2 LIVE Vitality vs NAVI / MongolZ vs Falcons) e Playoffs (19–21 Jun) |
 | `main-event.html` | Distribuição do prize pool de US$ 1.250.000, chaveamento dos playoffs (Quartas → Final) e schedule oficial dia a dia |
 | `teams.html` | Os **32 times participantes** organizados por tier (8 Legends, 8 Challengers, 16 Contenders) com roster em chips, ranking e região — **filtro funcional por região** (All / EU / SA / NA / CIS / Asia / MEA) + busca por nome/país/jogador |
@@ -112,7 +113,7 @@ Use **"Excluir todos"** no admin para limpar e voltar ao estado vazio.
 Todos os arquivos foram validados sem erros:
 
 - **HTML:** [validator.w3.org](https://validator.w3.org/) — 9/9 páginas sem erros
-- **CSS:** [jigsaw.w3.org/css-validator](https://jigsaw.w3.org/css-validator/) — `style.css` sem erros (warnings apenas sobre `var()` e `@import` do Google Fonts — comportamento esperado do validador)
+- **CSS:** [jigsaw.w3.org/css-validator](https://jigsaw.w3.org/css-validator/) — `style.css` e `admin.css` sem erros (warnings apenas sobre `var()` e `@import` do Google Fonts — comportamento esperado do validador)
 
 ## Integrante
 

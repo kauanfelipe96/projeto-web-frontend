@@ -30,7 +30,7 @@
           '<div class="nav-cta">' +
             '<a class="btn ghost nav-cta-desktop" href="login.html">Login</a>' +
             '<a class="btn primary nav-cta-desktop" href="cadastro.html">Cadastro</a>' +
-            '<a class="btn ghost nav-cta-desktop" href="admin.html" title="Admin" style="padding:8px 10px;">&#9881;</a>' +
+            '<a class="btn ghost nav-cta-desktop" href="admin.html" title="Painel administrativo">&#9881;&nbsp;Admin</a>' +
             '<button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menu" aria-expanded="false">' +
               '<span class="bar"></span>' +
               '<span class="bar"></span>' +
@@ -46,7 +46,7 @@
         '<div class="nav-drawer-cta">' +
           '<a class="btn ghost" href="login.html" style="flex:1;justify-content:center;">Login</a>' +
           '<a class="btn primary" href="cadastro.html" style="flex:1;justify-content:center;">Cadastro</a>' +
-          '<a class="btn ghost" href="admin.html" title="Admin" style="padding:8px 10px;">&#9881;</a>' +
+          '<a class="btn ghost" href="admin.html" title="Painel administrativo">&#9881;&nbsp;Admin</a>' +
         '</div>' +
       '</div>';
 
@@ -183,16 +183,14 @@
   var footMount = document.getElementById('site-foot');
   if (footMount) {
     footMount.innerHTML =
-      '<div class="foot-wrap">' +
+      '<footer class="foot-wrap">' +
         '<div class="foot">' +
-          '<div>' +
-            '<div>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA &mdash; Projeto acad&ecirc;mico, sem v&iacute;nculo oficial com ESL ou Valve.</div>' +
-          '</div>' +
+          '<p>&copy; 2026 KAUAN FELIPE AVELINO DE LIMA &mdash; Projeto acad&ecirc;mico, sem v&iacute;nculo oficial com ESL ou Valve.</p>' +
           '<div class="foot-links">' +
             '<a href="https://www.linkedin.com/in/kauan-felipe-fullstack/" target="_blank" rel="noopener">Curr&iacute;culo (LinkedIn)</a>' +
             '<a href="https://github.com/kauanfelipe96/projeto-web-frontend" target="_blank" rel="noopener">GitHub</a>' +
           '</div>' +
         '</div>' +
-      '</div>';
+      '</footer>';
   }
 })();
