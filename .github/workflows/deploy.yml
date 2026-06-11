@@ -1,0 +1,82 @@
+name: Validate & Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validação W3C (HTML + CSS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validar HTML (validator.w3.org/nu)
+        run: |
+          status=0
+          for f in *.html; do
+            echo "=== $f ==="
+            curl -s --retry 3 --retry-delay 5 \
+              -H "Content-Type: text/html; charset=utf-8" \
+              --data-binary @"$f" \
+              "https://validator.w3.org/nu/?out=json" \
+            | python3 -c '
+          import sys, json
+          msgs = json.load(sys.stdin)["messages"]
+          erros = [m for m in msgs if m["type"] == "error"]
+          for m in erros:
+              print("  ERRO linha %s: %s" % (m.get("lastLine", "?"), m["message"]))
+          print("  %s" % ("OK - sem erros" if not erros else "%d erro(s)" % len(erros)))
+          sys.exit(1 if erros else 0)
+          ' || { echo "::error file=$f::$f reprovou na validação HTML do W3C"; status=1; }
+            sleep 2   # respeita o rate limit do validador público
+          done
+          exit $status
+
+      - name: Validar CSS (jigsaw.w3.org)
+        run: |
+          status=0
+          for f in css/*.css; do
+            echo "=== $f ==="
+            resp=$(curl -s --retry 3 --retry-delay 5 \
+              -F "file=@$f;type=text/css" \
+              -F "profile=css3svg" \
+              -F "output=soap12" \
+              "https://jigsaw.w3.org/css-validator/validator")
+            erros=$(echo "$resp" | grep -oE '<m:errorcount>[0-9]+' | grep -oE '[0-9]+')
+            if [ "$erros" = "0" ]; then
+              echo "  OK - sem erros"
+            else
+              echo "$resp" | grep -oE '<m:message>[^<]*' | sed 's/<m:message>/  ERRO: /' | head -10
+              echo "::error file=$f::$f reprovou na validação CSS do W3C (${erros:-?} erros)"
+              status=1
+            fi
+            sleep 2
+          done
+          exit $status
+
+  deploy:
+    name: Deploy no GitHub Pages
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
