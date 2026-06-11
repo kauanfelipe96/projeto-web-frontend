@@ -1,10 +1,12 @@
 # Hub IEM Cologne Major 2026
 
+[![Validate & Deploy GitHub Pages](https://github.com/kauanfelipe96/projeto-web-frontend/actions/workflows/deploy.yml/badge.svg)](https://github.com/kauanfelipe96/projeto-web-frontend/actions/workflows/deploy.yml)
+
 Site não-oficial de cobertura do **IEM Cologne Major 2026** — primeiro Major de CS2 de 2026 —, desenvolvido como projeto da disciplina de Programação Web Front-End. O site cobre o evento em 5 páginas de conteúdo (overview, calendário completo de partidas, brackets dos playoffs, 32 times participantes por tier e guia da sede) e oferece um sistema de **Pick'em Challenge** com autenticação por sessão, leaderboard global e regras de pontuação por stage. A área administrativa **Control Panel** permite gerenciar os participantes com KPIs em tempo real, sparklines e painel de matches.
 
 ## Tema escolhido
 
-O IEM Cologne Major 2026 é o primeiro Major de CS2 organizado pela Valve/ESL em 2026, realizado de **2 a 21 de junho** na **Lanxess Arena** — a *"Catedral do Counter-Strike"* em Colônia, Alemanha. O tema foi escolhido por ser um evento real em andamento, com forte apelo visual para a comunidade competitiva e conteúdo autêntico para popular todas as seções do site (32 times confirmados conforme o HLTV, US$ 1.250.000 em premiação, partidas de abertura do dia 06/06).
+O IEM Cologne Major 2026 é o primeiro Major de CS2 organizado pela Valve/ESL em 2026, realizado de **2 a 21 de junho** na **Lanxess Arena** — a *"Catedral do Counter-Strike"* em Colônia, Alemanha. O tema foi escolhido por ser um evento real em andamento, com forte apelo visual para a comunidade competitiva e conteúdo autêntico para popular todas as seções do site (32 times confirmados conforme o HLTV, US$ 1.250.000 em premiação, resultados reais dos Stages 1 e 2 conforme HLTV/Liquipedia).
 
 ## Tecnologias
 
@@ -17,7 +19,7 @@ O IEM Cologne Major 2026 é o primeiro Major de CS2 organizado pela Valve/ESL em
 ```
 projeto-web-frontend/
 ├── index.html           # Overview — hub do Major (hero, key facts, partidas em destaque, top 8)
-├── matches.html         # Calendário completo de partidas por fase e dia (5 day-groups)
+├── matches.html         # Calendário completo de partidas por fase e dia (6 day-groups)
 ├── main-event.html      # Prize pool, brackets dos playoffs e schedule oficial
 ├── teams.html           # Os 32 times agrupados por tier (Legends/Challengers/Contenders)
 ├── venue.html           # Guia da Lanxess Arena (localização, transporte, dicas)
@@ -47,7 +49,7 @@ projeto-web-frontend/
 | Página | Descrição |
 |---|---|
 | `index.html` | Overview do Major: hero com badges do evento e timeline de stages, key facts (premiação, formato, sede), partidas em destaque com indicador live e cards dos 8 times do Legends Stage |
-| `matches.html` | Calendário em 5 day-groups — Stage 1 R1 (06 Jun · 8 matches com 2 LIVE), Stage 1 R2 (07 Jun), Stage 2 Challengers (09 Jun), Stage 3 Legends (14 Jun com 2 LIVE Vitality vs NAVI / MongolZ vs Falcons) e Playoffs (19–21 Jun) |
+| `matches.html` | Calendário em 6 day-groups com **resultados reais** (fonte: HLTV/Liquipedia) — Stage 1 R1 (02 Jun · 8 Bo1 com placar e mapa), deciders do Stage 1 (05 Jun · TYLOO, FlyQuest e BIG avançam), deciders do Stage 2 (09 Jun · Monte e Legacy avançam), Stage 3 Legends R1 (11 Jun · 8 Bo3 com horários), Rounds 2–5 (12–15 Jun) e Playoffs (18–21 Jun) |
 | `main-event.html` | Distribuição do prize pool de US$ 1.250.000, chaveamento dos playoffs (Quartas → Final) e schedule oficial dia a dia |
 | `teams.html` | Os **32 times participantes** organizados por tier (8 Legends, 8 Challengers, 16 Contenders) com roster em chips, ranking e região — **filtro funcional por região** (All / EU / SA / NA / CIS / Asia / MEA) + busca por nome/país/jogador |
 | `venue.html` | Guia da Lanxess Arena: capacidade, histórico, transporte público de Colônia, onde ficar/comer e dicas para o evento |
